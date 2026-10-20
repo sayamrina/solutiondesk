@@ -73,6 +73,14 @@ class WebTest {
     }
 
     @Test
+    void everyPageShowsThePortfolioBanner() throws Exception {
+        for (String url : new String[] {"/", "/support/tickets", "/learn?learner=1", "/learn/4/courses/2"}) {
+            mvc.perform(get(url)).andExpect(content().string(containsString("developed by Amrina as part of a portfolio")))
+                    .andExpect(content().string(containsString("target=\"_blank\"")));
+        }
+    }
+
+    @Test
     void unknownPagesAre404() throws Exception {
         mvc.perform(get("/support/tickets/SD-999")).andExpect(status().isNotFound());
     }

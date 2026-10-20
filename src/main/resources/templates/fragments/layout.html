@@ -8,7 +8,8 @@
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23154e7a'/%3E%3Cpath d='M9 17l5 5 9-11' stroke='white' stroke-width='3.2' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
 </head>
 <body>
-<header th:fragment="nav(active)" class="topbar">
+<th:block th:fragment="nav(active)">
+<header class="topbar">
   <div class="wrap topbar-in">
     <a class="brand" href="/"><span class="logo" aria-hidden="true"></span>SolutionDesk</a>
     <nav aria-label="Main">
@@ -23,6 +24,12 @@
     </nav>
   </div>
 </header>
+<aside class="project-popup" aria-label="Portfolio project">
+  <span class="project-popup-badge" aria-hidden="true">★</span>
+  <span>This app was developed by Amrina as part of a portfolio.</span>
+  <a href="https://sayamrina.github.io/" target="_blank" rel="noopener">View the portfolio <span aria-hidden="true">→</span><span class="sr-only"> (opens in a new tab)</span></a>
+</aside>
+</th:block>
 <footer th:fragment="footer" class="footer">
   <div class="wrap">SolutionDesk · AI project by Amrina · Sample data only, reset on every restart ·
     <a href="https://sayamrina.github.io/solutiondesk/">Project page</a> · <a href="https://sayamrina.github.io/">Portfolio</a></div>
