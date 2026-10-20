@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SolutionDesk</title>
+<meta name="description" content="AI project 2026: a digital learning platform with the support desk behind it. Java, SQL, XML, structured logs, incident handling and a knowledge base.">
+<style>
+:root { --bg:#f4f6f9; --surface:#fff; --ink:#18212b; --muted:#5b6774; --line:#dde3ea; --accent:#154e7a; --link:#1f5fa8; --soft:#e3eef7;
+  --sans:"Segoe UI", Roboto, Helvetica, Arial, sans-serif; --mono:ui-monospace, Menlo, Consolas, monospace; }
+@media (prefers-color-scheme: dark) { :root { --bg:#0f161d; --surface:#16212b; --ink:#e6edf3; --muted:#9fb1c0; --line:#283846; --accent:#9cc3ea; --link:#8cc0f0; --soft:#1c2c3a; } }
+* { box-sizing:border-box; }
+body { margin:0; background:var(--bg); color:var(--ink); font:16px/1.6 var(--sans); }
+.wrap { max-width:960px; margin:0 auto; padding:0 20px; }
+header { padding:56px 0 36px; border-bottom:1px solid var(--line); }
+.kicker { font-size:13px; font-weight:600; letter-spacing:.08em; text-transform:uppercase; color:var(--link); }
+h1 { font-size:clamp(34px,6vw,52px); line-height:1.05; margin:12px 0 16px; color:var(--accent); }
+.lead { font-size:19px; max-width:780px; margin:0; }
+.author { display:flex; align-items:center; gap:12px; margin-top:22px; }
+.author img { width:52px; height:52px; border-radius:50%; object-fit:cover; border:1px solid var(--line); }
+.byline { color:var(--muted); font-size:14px; }
+a { color:var(--link); }
+.btns { display:flex; gap:10px; flex-wrap:wrap; margin-top:24px; }
+.btn { padding:10px 16px; border-radius:8px; font-weight:600; font-size:15px; text-decoration:none; border:1px solid var(--accent); color:var(--accent); }
+.btn.primary { background:var(--accent); color:var(--bg); }
+section { padding:40px 0; border-bottom:1px solid var(--line); }
+h2 { font-size:26px; margin:0 0 6px; color:var(--accent); }
+.sub { color:var(--muted); margin:0 0 20px; }
+table { width:100%; border-collapse:collapse; font-size:15px; background:var(--surface); border:1px solid var(--line); }
+th, td { padding:9px 12px; text-align:left; border-bottom:1px solid var(--line); vertical-align:top; }
+th { background:var(--soft); font-size:12.5px; text-transform:uppercase; letter-spacing:.04em; color:var(--muted); }
+code { font-family:var(--mono); font-size:13.5px; background:var(--soft); padding:1px 5px; border-radius:4px; }
+.tour { display:grid; grid-template-columns:repeat(2,1fr); gap:8px 16px; padding:0; margin:0; list-style:none; counter-reset:t; }
+.tour li { display:grid; grid-template-columns:26px 1fr; gap:10px; padding:8px 0; border-bottom:1px solid var(--line); counter-increment:t; font-size:15px; }
+.tour li::before { content:counter(t); display:grid; place-items:center; width:26px; height:26px; border-radius:50%; background:var(--accent); color:var(--bg); font-weight:700; font-size:13.5px; }
+figure { margin:0 0 18px; }
+figure img { width:100%; height:auto; border:1px solid var(--line); border-radius:10px; display:block; }
+figcaption { font-size:14px; color:var(--muted); margin-top:6px; }
+.two { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+.note { color:var(--muted); font-size:14px; }
+.table-wrap { overflow-x:auto; }
+footer { padding:28px 0 56px; color:var(--muted); font-size:14px; }
+@media (max-width:760px) { .two, .tour { grid-template-columns:1fr; } header { padding-top:40px; } .lead { font-size:17px; } }
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <div class="kicker">AI project 2026 · Java · Spring Boot · SQL · XML · Incident management</div>
+    <h1>SolutionDesk</h1>
+    <p class="lead">A small digital learning platform and the support desk behind it. Every error carries an error code and a request ID; support analyses incidents with structured logs, read-only SQL diagnostics and a knowledge base, then resolves them or escalates to Hosting or Development.</p>
+    <div class="author">
+      <img src="img/amrina.jpg" alt="Photo of Amrina" width="52" height="52">
+      <div><strong>Amrina</strong><div class="byline">M.Sc. Educational Technology, Saarland University · <a href="https://sayamrina.github.io/">Portfolio</a></div></div>
+    </div>
+    <div class="btns">
+      <a class="btn primary" href="https://solutiondesk.onrender.com/">Try the live app</a>
+      <a class="btn" href="#how-to-use">How to use it</a>
+      <a class="btn" href="https://github.com/sayamrina/solutiondesk">Code on GitHub</a>
+      <a class="btn" href="https://sayamrina.github.io/">My portfolio</a>
+    </div>
+  </div>
+</header>
+
+<section id="how-to-use">
+  <div class="wrap">
+    <h2>How to use it</h2>
+    <p class="sub">About six minutes: you follow one incident from the learner's error page to the resolved ticket.</p>
+    <ol class="tour">
+      <li><div><b>Open the app.</b> The free hosting sleeps when idle, so the first load can take about a minute.</div></li>
+      <li><div><b>Be a learner:</b> <i>Learner view</i> → view as <i>Sam Richter</i> → course link <code>KWM-HY-201</code>. Note the error code and request ID.</div></li>
+      <li><div><b>Pick up the ticket:</b> <i>Tickets</i> → <b>SD-104</b>. The request trail shows the reason from the log.</div></li>
+      <li><div><b>Confirm with SQL:</b> open the knowledge base article, run <i>Why can't a learner see a course?</i>. Verdict: <code>group mismatch</code>.</div></li>
+      <li><div><b>Resolve:</b> move to <i>In analysis</i>, then <i>Resolved</i> with root cause and resolution. Without a root cause the app refuses.</div></li>
+      <li><div><b>Try more:</b> SD-108 (broken XML, reproduce it in <i>Course packages</i>), SD-103, SD-107. Export for Jira as CSV.</div></li>
+    </ol>
+    <p class="note" style="margin-top:12px">All data is sample data and resets when the server restarts.</p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>Skills it shows</h2>
+    <p class="sub">Built around the daily work of an incident specialist for e-learning software.</p>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Skill</th><th>In the project</th></tr></thead>
+      <tbody>
+        <tr><td>Java</td><td>Spring Boot 3 on Java 21: services, JDBC repositories, controllers, central error handling; 37 JUnit and MockMvc tests</td></tr>
+        <tr><td>SQL</td><td>Schema with constraints and indexes, plain SQL repositories, six parameterised read-only diagnostic queries</td></tr>
+        <tr><td>XML</td><td>Course package importer: encoding, well-formedness, required fields, references; DOCTYPE blocked against XXE</td></tr>
+        <tr><td>HTML / CSS</td><td>Server-rendered pages (Thymeleaf), responsive layout, lesson HTML reduced to a safe allowlist</td></tr>
+        <tr><td>Log and error analysis</td><td>logfmt logs with request ID, error code, owner team, path, status and duration; error groups, search, request trails</td></tr>
+        <tr><td>Incident handling</td><td>Impact × urgency priority, response targets, workflow rules, escalation with evidence, root cause / workaround / resolution, Jira CSV export</td></tr>
+        <tr><td>Knowledge base</td><td>One article per error code: symptom, cause, how to check, workaround, when to escalate</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>In the app</h2>
+    <figure><img src="img/ticket.png" alt="Ticket SD-106 with analysis, activity and next step" width="1366" height="860" loading="lazy"><figcaption>A resolved incident: customer report, root cause, workaround, resolution and the full activity, including the escalation to Development.</figcaption></figure>
+    <div class="two">
+      <figure><img src="img/logs.png" alt="Error groups in the log analysis" width="1366" height="860" loading="lazy"><figcaption>Log analysis: errors grouped by code, with owner team, paths and request IDs.</figcaption></figure>
+      <figure><img src="img/diagnostics.png" alt="SQL diagnostic with verdict group mismatch" width="1366" height="860" loading="lazy"><figcaption>SQL diagnostics: reviewed, parameterised and read-only.</figcaption></figure>
+      <figure><img src="img/error.png" alt="Learner error page with error code and request ID" width="1366" height="860" loading="lazy"><figcaption>What the learner sees: a clear message, the error code and the request ID to quote.</figcaption></figure>
+      <figure><img src="img/import.png" alt="Course package import" width="1366" height="860" loading="lazy"><figcaption>Course packages: valid and broken samples that reproduce real incidents.</figcaption></figure>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>From incident to fix</h2>
+    <p class="sub">Two code bugs were planted on purpose in the first release and fixed afterwards, each with a regression test that fails before the fix.</p>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Ticket</th><th>Symptom</th><th>Root cause</th><th>Fix</th></tr></thead>
+      <tbody>
+        <tr><td>SD-105</td><td>Quiz shows 0 % although most answers were correct</td><td>Integer division: <code>(correct / total) * 100</code></td><td><a href="https://github.com/sayamrina/solutiondesk/commit/1faa067">1faa067</a>: multiply first, regression tests</td></tr>
+        <tr><td>SD-106</td><td>Error page on the course catalog for one group</td><td><code>NullPointerException</code> for a course without description</td><td><a href="https://github.com/sayamrina/solutiondesk/commit/c2e402c">c2e402c</a>: null-safe teaser, regression tests</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+</section>
+
+<footer><div class="wrap">AI project 2026 · This app was built by Amrina, with AI as a supporting tool for coding. · <a href="https://sayamrina.github.io/">Portfolio</a></div></footer>
+</body>
+</html>
