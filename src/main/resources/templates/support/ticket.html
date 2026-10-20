@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:replace="~{fragments/layout :: head(${t.key()})}"></head>
+<body>
+<header th:replace="~{fragments/layout :: nav('tickets')}"></header>
+<main class="wrap">
+  <p class="small"><a href="/support/tickets">← Tickets</a></p>
+  <div class="row"><span class="mono muted" th:text="${t.key()}">SD-1</span>
+    <span th:replace="~{fragments/layout :: prio(${t.priority()})}"></span>
+    <span th:replace="~{fragments/layout :: status(${t.status()})}"></span>
+    <span class="tag team" th:text="${t.team()}">Support</span></div>
+  <h1 style="margin-top:8px" th:text="${t.summary()}">Summary</h1>
+
+  <div class="two-col" style="margin-top:14px">
+    <div class="stack">
+      <div class="card">
+        <p class="box-title">Customer report</p>
+        <p style="margin:0" th:text="${t.description()}">description</p>
+      </div>
+
+      <div class="card" th:if="${t.requestId() != null}">
+        <div class="row spread"><p class="box-title" style="margin:0">Request trail <span class="mono" th:text="${t.requestId()}">id</span></p>
+          <a class="small" th:href="@{/support/logs/request/{id}(id=${t.requestId()})}">Open in log analysis</a></div>
+        <p class="small muted" th:if="${trail.isEmpty()}">The log no longer contains this request (logs are kept in memory and reset on restart).</p>
+        <div class="logline" th:each="e : ${trail}" style="margin-top:8px">
+          <span class="muted" th:text="${@fmt.time(e.timestamp())}">time</span> <span class="lvl" th:classappend="${e.level()}" th:text="${e.level()}">INFO</span>
+          <span th:text="${e.field('method')} + ' ' + ${e.field('path')}">path</span>
+          <span th:if="${!e.field('errorCode').isEmpty()}" class="tag" th:text="${e.field('errorCode')}">code</span>
+          <span th:if="${!e.field('status').isEmpty()}" th:text="'→ ' + ${e.field('status')}">→ 200</span>
+          <br><span th:text="${e.message()}">message</span>
+        </div>
+      </div>
+
+      <div class="card" th:if="${t.rootCause() != null or t.workaround() != null or t.resolution() != null}">
+        <p class="box-title">Analysis</p>
+        <dl class="facts">
+          <dt th:if="${t.rootCause() != null}">Root cause</dt><dd th:if="${t.rootCause() != null}" th:text="${t.rootCause()}">rc</dd>
+          <dt th:if="${t.workaround() != null}">Workaround</dt><dd th:if="${t.workaround() != null}" th:text="${t.workaround()}">wa</dd>
+          <dt th:if="${t.resolution() != null}">Resolution</dt><dd th:if="${t.resolution() != null}" th:text="${t.resolution()}">res</dd>
+        </dl>
+      </div>
+
+      <div class="card" id="activity">
+        <p class="box-title">Activity</p>
+        <ul class="timeline">
+          <li th:each="ev : ${events}" th:classappend="${'k-' + ev.kind()}">
+            <div class="meta"><strong th:text="${ev.actor()}">actor</strong> · <span th:text="${@fmt.dt(ev.at())}">date</span></div>
+            <div th:text="${ev.text()}">text</div>
+          </li>
+        </ul>
+        <form method="post" th:action="@{/support/tickets/{k}/comment(k=${t.key()})}" th:if="${t.status().name() != 'CLOSED'}">
+          <label for="comment">Internal note</label>
+          <textarea id="comment" name="text" placeholder="What did you check, what did you find?" required></textarea>
+          <p style="margin:8px 0 0"><button class="btn small">Add note</button></p>
+        </form>
+      </div>
+    </div>
+
+    <aside class="stack">
+      <div class="card">
+        <p class="box-title">Details</p>
+        <dl class="facts">
+          <dt>Customer</dt><dd th:text="${t.customerName()}">c</dd>
+          <dt>Error code</dt><dd><span class="tag" th:text="${t.errorCode() ?: '–'}">code</span></dd>
+          <dt>Impact</dt><dd th:text="${t.impact() == 1 ? '1 · many customers' : (t.impact() == 2 ? '2 · one customer / a group' : '3 · single user')}">i</dd>
+          <dt>Urgency</dt><dd th:text="${t.urgency() == 1 ? '1 · work blocked' : (t.urgency() == 2 ? '2 · work harder' : '3 · minor')}">u</dd>
+          <dt>Created</dt><dd th:text="${@fmt.dt(t.createdAt())}">d</dd>
+          <dt>First response</dt><dd><span th:text="'due ' + ${@fmt.dt(responseDue)}">due</span>
+            <span class="small" th:if="${t.status().name() == 'NEW' and @fmt.overdue(responseDue)}" style="color:var(--bad);font-weight:700"> · overdue</span></dd>
+        </dl>
+      </div>
+
+      <div class="card" th:if="${article != null}">
+        <p class="box-title">Knowledge base</p>
+        <a th:href="@{/support/kb/{s}(s=${article.slug()})}" th:text="${article.title()}">title</a>
+        <p class="small muted" style="margin:6px 0 0" th:text="${article.summary()}">summary</p>
+      </div>
+
+      <div class="card" th:if="${!next.isEmpty()}">
+        <p class="box-title">Next step</p>
+        <form method="post" th:action="@{/support/tickets/{k}/status(k=${t.key()})}" class="stack">
+          <div class="field"><label for="to">Move to</label>
+            <select id="to" name="to">
+              <option th:each="s : ${next}" th:value="${s.name()}" th:text="${s.label()}">status</option>
+            </select></div>
+          <div class="field"><label for="team">Escalate to (only for "Escalated")</label>
+            <select id="team" name="team">
+              <option th:each="tm : ${teams}" th:if="${tm != 'Support'}" th:value="${tm}" th:text="${tm}">team</option>
+            </select></div>
+          <div class="field"><label for="note">Note</label><textarea id="note" name="note" placeholder="Analysis so far, what the next team needs"></textarea></div>
+          <details><summary>Root cause, workaround, resolution</summary>
+            <div class="field" style="margin-top:8px"><label for="rc">Root cause</label><textarea id="rc" name="rootCause" th:text="${t.rootCause()}"></textarea></div>
+            <div class="field"><label for="wa">Workaround</label><textarea id="wa" name="workaround" th:text="${t.workaround()}"></textarea></div>
+            <div class="field"><label for="res">Resolution</label><textarea id="res" name="resolution" th:text="${t.resolution()}"></textarea></div>
+          </details>
+          <button class="btn">Save</button>
+        </form>
+      </div>
+
+      <div class="card" th:if="${t.status().open()}">
+        <p class="box-title">Priority</p>
+        <form method="post" th:action="@{/support/tickets/{k}/priority(k=${t.key()})}" class="row">
+          <select name="impact" aria-label="Impact"><option th:each="i : ${#numbers.sequence(1,3)}" th:value="${i}" th:selected="${i == t.impact()}" th:text="|Impact ${i}|">1</option></select>
+          <select name="urgency" aria-label="Urgency"><option th:each="u : ${#numbers.sequence(1,3)}" th:value="${u}" th:selected="${u == t.urgency()}" th:text="|Urgency ${u}|">1</option></select>
+          <button class="btn ghost small">Update</button>
+        </form>
+      </div>
+    </aside>
+  </div>
+</main>
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+</body>
+</html>

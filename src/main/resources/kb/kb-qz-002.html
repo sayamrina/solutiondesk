@@ -1,0 +1,8 @@
+<article data-code="SD-QZ-002" data-title="Quiz result not saved: enrollment expired" data-summary="The enrollment's end date has passed. The learner can still open the course but results are not stored.">
+<h2>Symptom</h2>
+<p>A learner reports that the result does not appear in the report. The error page shows <code>SD-QZ-002</code>.</p>
+<h2>How to check</h2>
+<ol><li>Open the request trail: the log line names the enrollment ID and the end date.</li><li>Run the diagnostic <a href="/support/diagnostics?check=enrollment-status">Enrollments and quiz results of a learner</a> with the learner's e-mail address.</li></ol>
+<h2>Solution</h2>
+<p>This is expected behaviour, not a bug. The customer's training coordinator extends the enrollment; then the learner submits the quiz again. Tell the learner that the earlier attempts were not stored.</p>
+</article>

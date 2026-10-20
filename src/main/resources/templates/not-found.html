@@ -1,0 +1,9 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:replace="~{fragments/layout :: head('Not found')}"></head>
+<body>
+<header th:replace="~{fragments/layout :: nav('')}"></header>
+<main class="wrap"><div class="card errorbox"><h1>Not found</h1><p>This page does not exist.</p><a class="btn small" href="/">Back to the overview</a></div></main>
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+</body>
+</html>

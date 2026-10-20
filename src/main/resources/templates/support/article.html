@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:replace="~{fragments/layout :: head(${article.title()})}"></head>
+<body>
+<header th:replace="~{fragments/layout :: nav('kb')}"></header>
+<main class="wrap">
+  <p class="small"><a href="/support/kb">← Knowledge base</a></p>
+  <span class="tag" th:text="${article.code()}">code</span>
+  <h1 style="margin-top:8px" th:text="${article.title()}">title</h1>
+  <div class="two-col">
+    <div class="card kb-body" th:utext="${article.html()}">body</div>
+    <aside class="card">
+      <p class="box-title">Tickets with this error</p>
+      <p class="small muted" th:if="${tickets.isEmpty()}">None.</p>
+      <div th:each="t : ${tickets}" style="margin-bottom:8px">
+        <a class="mono" th:href="@{/support/tickets/{k}(k=${t.key()})}" th:text="${t.key()}">k</a>
+        <span th:replace="~{fragments/layout :: status(${t.status()})}"></span>
+        <div class="small" th:text="${t.summary()}">s</div>
+      </div>
+    </aside>
+  </div>
+</main>
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+</body>
+</html>

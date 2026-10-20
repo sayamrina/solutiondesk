@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<manifest identifier="VLG-GS-103" version="1.2">
+  <metadata>
+    <title>Gefahrgut: Grundlagen für Fahrer</title>
+    <description>Kennzeichnung, Begleitpapiere und Verhalten bei Störungen.</description>
+    <targetGroup>Disposition</targetGroup>
+    <status>published</status>
+  </metadata>
+  <organization>
+    <item identifierref="g1" title="Kennzeichnung und Gefahrzettel"/>
+  </organization>
+  <resources>
+    <resource identifier="g1" href="labels.html"><content><![CDATA[<p>Orangefarbene Warntafeln vorn und hinten, Gefahrzettel am Versandstück.</p>]]></content></resource>
+  </resources>
+</manifest>

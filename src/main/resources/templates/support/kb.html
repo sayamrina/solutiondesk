@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:replace="~{fragments/layout :: head('Knowledge base')}"></head>
+<body>
+<header th:replace="~{fragments/layout :: nav('kb')}"></header>
+<main class="wrap">
+  <h1>Knowledge base</h1>
+  <p class="lead">One article per error code: symptom, cause, how to check, workaround and when to escalate.</p>
+  <form method="get" action="/support/kb" class="row" style="margin-bottom:16px">
+    <input name="q" th:value="${q}" placeholder="error code or keyword" aria-label="Search" style="min-width:300px"><button class="btn small">Search</button>
+  </form>
+  <div class="grid g3">
+    <a class="card" th:each="a : ${articles}" th:href="@{/support/kb/{s}(s=${a.slug()})}" style="text-decoration:none;color:inherit">
+      <span class="tag" th:text="${a.code()}">code</span>
+      <h3 style="margin-top:8px;color:var(--brand)" th:text="${a.title()}">title</h3>
+      <p class="small muted" style="margin:0" th:text="${a.summary()}">summary</p>
+    </a>
+  </div>
+</main>
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+</body>
+</html>

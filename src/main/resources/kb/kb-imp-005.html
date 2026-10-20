@@ -1,0 +1,8 @@
+<article data-code="SD-IMP-005" data-title="DOCTYPE declarations are blocked" data-summary="For security, packages with a DOCTYPE (and therefore external entities) are rejected.">
+<h2>Symptom</h2>
+<p>The import stops with <code>SD-IMP-005</code>.</p>
+<h2>Why this is blocked</h2>
+<p>A DOCTYPE can define external entities that make the server read local files or call other servers (XXE attack). The platform never resolves them. Legitimate course packages do not need a DOCTYPE.</p>
+<h2>Solution</h2>
+<p>Remove the <code>&lt;!DOCTYPE …&gt;</code> line and any entity references such as <code>&amp;name;</code>. If a package arrives with an entity that points to a system file, inform the customer's IT security contact.</p>
+</article>

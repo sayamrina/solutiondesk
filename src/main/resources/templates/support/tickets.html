@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:replace="~{fragments/layout :: head('Tickets')}"></head>
+<body>
+<header th:replace="~{fragments/layout :: nav('tickets')}"></header>
+<main class="wrap">
+  <div class="row spread">
+    <div><h1>Tickets</h1><p class="lead" style="margin-bottom:8px">Incidents reported by customers. Priority comes from impact × urgency; the first response is due within the target time for its priority.</p></div>
+    <div class="row">
+      <a class="btn ghost small" href="/support/tickets/export.csv">Export for Jira (CSV)</a>
+      <a class="btn small" href="/support/tickets/new">New ticket</a>
+    </div>
+  </div>
+  <div class="row" style="margin:6px 0 14px">
+    <a class="btn small" th:classappend="${view != 'open'} ? 'ghost'" href="/support/tickets?view=open">Open</a>
+    <a class="btn small" th:classappend="${view != 'closed'} ? 'ghost'" href="/support/tickets?view=closed">Resolved and closed</a>
+    <a class="btn small" th:classappend="${view != 'all'} ? 'ghost'" href="/support/tickets?view=all">All</a>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Key</th><th>Priority</th><th>Summary</th><th>Customer</th><th>Error code</th><th>Status</th><th>Team</th><th>Updated</th></tr></thead>
+      <tbody>
+      <tr th:each="t : ${tickets}">
+        <td><a class="mono" th:href="@{/support/tickets/{k}(k=${t.key()})}" th:text="${t.key()}">SD-1</a></td>
+        <td><span th:replace="~{fragments/layout :: prio(${t.priority()})}"></span></td>
+        <td><a th:href="@{/support/tickets/{k}(k=${t.key()})}" th:text="${t.summary()}" style="color:inherit;text-decoration:none">summary</a></td>
+        <td th:text="${t.customerName()}">customer</td>
+        <td><span class="tag" th:if="${t.errorCode() != null}" th:text="${t.errorCode()}">code</span></td>
+        <td><span th:replace="~{fragments/layout :: status(${t.status()})}"></span></td>
+        <td><span class="tag team" th:text="${t.team()}">Support</span></td>
+        <td class="small muted" th:text="${@fmt.ago(t.updatedAt())}">ago</td>
+      </tr>
+      <tr th:if="${tickets.isEmpty()}"><td colspan="8" class="muted">No tickets in this view.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</main>
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+</body>
+</html>

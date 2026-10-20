@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<manifest identifier="KWM-DP-202" version="1.1">
+  <metadata>
+    <title>Data Protection for Administration Staff</title>
+    <targetGroup>Verwaltung</targetGroup>
+    <status>published</status>
+  </metadata>
+  <organization>
+    <item identifierref="d1" title="What counts as personal data"/>
+    <item identifierref="d2" title="Requests from patients"/>
+  </organization>
+  <resources>
+    <resource identifier="d1" href="personal-data.html"><content><![CDATA[<p>Names, addresses, insurance numbers and especially health data. Health data is a special category under Art. 9 GDPR.</p>]]></content></resource>
+    <resource identifier="d2" href="requests.html"><content><![CDATA[<p>A request for access must be answered within <strong>one month</strong>. Check the identity of the person first and forward the request to the data protection officer.</p>]]></content></resource>
+  </resources>
+  <assessment passScore="80">
+    <question correct="1"><text>How fast must an access request be answered?</text><option>Within one week</option><option>Within one month</option><option>Within one year</option></question>
+    <question correct="0"><text>What do you check first?</text><option>The identity of the person</option><option>The weather</option><option>Nothing</option></question>
+  </assessment>
+</manifest>

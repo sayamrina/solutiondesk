@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<manifest identifier="TMB-FS-302" version="1.2">
+  <metadata>
+    <title>Fire Safety in the Workshop</title>
+    <description>Escape routes, extinguishers and the alarm chain.</description>
+    <targetGroup>Fertigung</targetGroup>
+    <status>published</status>
+  </metadata>
+  <organization>
+    <item identifierref="s1" title="Escape routes"/>
+  </organization>
+  <resources>
+    <resource identifier="s1" href="escape.html"><content><![CDATA[<p>Keep escape routes clear.</p>]]></content>
+  </resources>
+</manifest>

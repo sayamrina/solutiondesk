@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE manifest [ <!ENTITY secret SYSTEM "file:///etc/passwd"> ]>
+<manifest identifier="TMB-SC-303" version="1.2">
+  <metadata>
+    <title>Supplier Code of Conduct &secret;</title>
+    <targetGroup>Fertigung</targetGroup>
+    <status>published</status>
+  </metadata>
+  <organization><item identifierref="c1" title="Principles"/></organization>
+  <resources><resource identifier="c1" href="principles.html"><content>Principles</content></resource></resources>
+</manifest>

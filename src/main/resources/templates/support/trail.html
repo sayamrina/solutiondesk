@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:replace="~{fragments/layout :: head('Request ' + ${requestId})}"></head>
+<body>
+<header th:replace="~{fragments/layout :: nav('logs')}"></header>
+<main class="wrap">
+  <p class="small"><a href="/support/logs">← Log analysis</a></p>
+  <h1>Request <span class="mono" th:text="${requestId}">id</span></h1>
+  <p class="lead">Everything this request wrote to the log, in order.</p>
+  <div class="notice info" th:if="${!tickets.isEmpty()}" style="margin-bottom:14px">Linked ticket:
+    <a th:each="t : ${tickets}" th:href="@{/support/tickets/{k}(k=${t.key()})}" th:text="|${t.key()} ${t.summary()}|">t</a></div>
+  <div class="notice warn" th:if="${events.isEmpty()}">No events for this request ID. Logs are kept in memory and reset when the server restarts.</div>
+  <div class="card" th:if="${!events.isEmpty()}">
+    <div th:each="e : ${events}" style="padding:10px 0;border-bottom:1px solid var(--line)">
+      <div class="row small">
+        <span class="mono muted" th:text="${@fmt.time(e.timestamp())}">t</span>
+        <span class="lvl" th:classappend="${e.level()}" th:text="${e.level()}">L</span>
+        <span class="mono muted" th:text="${e.logger()}">logger</span>
+        <span th:if="${!e.field('errorCode').isEmpty()}" class="tag" th:text="${e.field('errorCode')}">code</span>
+        <a th:if="${!e.field('errorCode').isEmpty() and e.field('errorCode') != 'SD-PERF-001'}"
+           th:href="@{/support/kb/{s}(s=${'kb-' + e.field('errorCode').substring(3).toLowerCase()})}">knowledge base</a>
+      </div>
+      <div class="logline" th:text="${e.message()}">message</div>
+      <div class="logline muted small" th:text="${e.fields()}">fields</div>
+      <div class="logline" th:if="${!e.exception().isEmpty()}" style="color:var(--bad)" th:text="${e.exception()} + '\n  at ' + ${e.stackTop()}">ex</div>
+    </div>
+  </div>
+</main>
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+</body>
+</html>

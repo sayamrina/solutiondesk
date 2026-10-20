@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<manifest identifier="VLG-LS-101" version="1.2">
+  <metadata>
+    <title>Load Securing Basics</title>
+    <description>Why loads move, which forces act on them during braking and cornering, and how to choose straps, anti-slip mats and blocking for a safe trip.</description>
+    <targetGroup>Disposition</targetGroup>
+    <status>published</status>
+  </metadata>
+  <organization>
+    <item identifierref="r1" title="Forces on the load"/>
+    <item identifierref="r2" title="Securing methods"/>
+    <item identifierref="r3" title="Checks before departure"/>
+  </organization>
+  <resources>
+    <resource identifier="r1" href="lesson-forces.html"><content><![CDATA[<p>During emergency braking a load pushes forward with up to <strong>80 %</strong> of its own weight, and sideways with up to 50 % in a tight curve. Friction alone is never enough.</p>]]></content></resource>
+    <resource identifier="r2" href="lesson-methods.html"><content><![CDATA[<p>Blocking (form-fit) holds the load against the vehicle structure. Lashing (force-fit) presses it down so friction can work. Anti-slip mats raise friction and reduce the number of straps you need.</p>]]></content></resource>
+    <resource identifier="r3" href="lesson-checks.html"><content><![CDATA[<ul><li>Straps undamaged and labelled</li><li>Edge protectors where straps touch sharp edges</li><li>Re-check tension after the first kilometres</li></ul>]]></content></resource>
+  </resources>
+  <assessment passScore="80">
+    <question correct="1"><text>How much of its weight can a load push forward during emergency braking?</text><option>20 %</option><option>80 %</option><option>150 %</option></question>
+    <question correct="0"><text>What does an anti-slip mat do?</text><option>It raises friction</option><option>It replaces all straps</option><option>It makes the load lighter</option></question>
+    <question correct="2"><text>When should you re-check strap tension?</text><option>Never</option><option>Only at the destination</option><option>After the first kilometres</option></question>
+    <question correct="1"><text>Which method holds the load against the vehicle structure?</text><option>Lashing</option><option>Blocking</option><option>Covering</option></question>
+    <question correct="0"><text>Where do you need edge protectors?</text><option>Where straps touch sharp edges</option><option>On the tyres</option><option>Nowhere</option></question>
+  </assessment>
+</manifest>

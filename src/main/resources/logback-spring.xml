@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+  <!-- logfmt-style structured lines: easy to read for people and easy to search for tools -->
+  <property name="PATTERN"
+            value="ts=%d{yyyy-MM-dd'T'HH:mm:ss.SSSXXX} level=%level logger=%logger{0} req=%X{requestId:--} code=%X{errorCode:--} team=%X{team:--} path=%X{path:--} status=%X{status:--} ms=%X{durationMs:--} msg=&quot;%replace(%msg){'&quot;','\\&quot;'}&quot;%n%ex{12}"/>
+  <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder><pattern>${PATTERN}</pattern></encoder>
+  </appender>
+  <appender name="BUFFER" class="io.github.sayamrina.solutiondesk.logging.BufferAppender"/>
+  <logger name="solutiondesk" level="INFO" additivity="false">
+    <appender-ref ref="CONSOLE"/>
+    <appender-ref ref="BUFFER"/>
+  </logger>
+  <logger name="io.github.sayamrina" level="INFO" additivity="false">
+    <appender-ref ref="CONSOLE"/>
+    <appender-ref ref="BUFFER"/>
+  </logger>
+  <root level="INFO">
+    <appender-ref ref="CONSOLE"/>
+  </root>
+</configuration>

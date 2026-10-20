@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:replace="~{fragments/layout :: head('SQL diagnostics')}"></head>
+<body>
+<header th:replace="~{fragments/layout :: nav('diag')}"></header>
+<main class="wrap">
+  <h1>SQL diagnostics</h1>
+  <p class="lead">Reviewed, read-only SQL checks with parameters. There is deliberately no free SQL console on a customer-facing system.</p>
+  <div class="two-col" style="grid-template-columns: 300px minmax(0,1fr)">
+    <aside class="card">
+      <p class="box-title">Checks</p>
+      <div th:each="c : ${checks}" style="margin-bottom:10px">
+        <a th:href="@{/support/diagnostics(check=${c.id()})}" th:text="${c.title()}" th:style="${active != null and active.id() == c.id()} ? 'font-weight:700'">title</a>
+        <div class="small muted" th:text="${c.question()}">q</div>
+      </div>
+    </aside>
+    <div class="stack" th:if="${active != null}">
+      <div class="card">
+        <h2 style="margin-top:0" th:text="${active.title()}">title</h2>
+        <form method="get" action="/support/diagnostics" class="row" th:if="${!active.params().isEmpty()}" style="margin-bottom:12px">
+          <input type="hidden" name="check" th:value="${active.id()}">
+          <select name="email" th:if="${active.params().contains('email')}" aria-label="Learner">
+            <option value="">learner (e-mail)</option>
+            <option th:each="l : ${learners}" th:value="${l['EMAIL']}" th:selected="${l['EMAIL'] == params['email']}" th:text="|${l['NAME']} · ${l['EMAIL']}|">l</option>
+          </select>
+          <select name="course_code" th:if="${active.params().contains('course_code')}" aria-label="Course">
+            <option value="">course</option>
+            <option th:each="c : ${courseCodes}" th:value="${c}" th:selected="${c == params['course_code']}" th:text="${c}">c</option>
+          </select>
+          <button class="btn small">Run</button>
+        </form>
+        <pre class="sql" th:text="${active.sql()}">sql</pre>
+      </div>
+      <div th:if="${result != null}">
+        <p class="small muted" th:text="|${result.rows().size()} row(s)|">rows</p>
+        <div class="table-wrap" th:if="${!result.rows().isEmpty()}">
+          <table>
+            <thead><tr><th th:each="col : ${result.columns()}" th:text="${col}">col</th></tr></thead>
+            <tbody><tr th:each="r : ${result.rows()}">
+              <td th:each="col : ${result.columns()}" th:text="${r[col]}"
+                  th:classappend="${col == 'verdict'} ? (${r[col] == 'visible'} ? 'verdict-visible' : 'verdict-bad')">v</td>
+            </tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="card" th:if="${active == null}"><p class="muted">Choose a check on the left.</p></div>
+  </div>
+</main>
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+</body>
+</html>

@@ -1,0 +1,10 @@
+<article data-code="SD-IMP-004" data-title="Encoding problem: umlauts or special characters break the import" data-summary="The file says UTF-8 but was saved as Windows-1252 or ISO-8859-1.">
+<h2>Symptom</h2>
+<p>The import stops with <code>SD-IMP-004</code> and a line number. German titles with ä, ö, ü or ß are typical.</p>
+<h2>Cause</h2>
+<p>The first line declares <code>encoding="UTF-8"</code>, but the file was saved by an older editor as Windows-1252. In Windows-1252, <code>ü</code> is the single byte <code>0xFC</code>, which is not valid UTF-8.</p>
+<h2>How to check</h2>
+<p>Open the file in an editor that shows the encoding (e.g. Notepad++, VS Code: bottom right). A hex view shows a single byte between <code>0x80</code> and <code>0xFF</code> where a two-byte UTF-8 sequence is expected.</p>
+<h2>Solution</h2>
+<p>Save the file as <strong>UTF-8 without BOM</strong> and import again. Do not change the encoding declaration to match a wrong file: keep UTF-8 as the standard.</p>
+</article>

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:fragment="head(title)">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title th:text="${title} + ' · SolutionDesk'">SolutionDesk</title>
+  <link rel="stylesheet" href="/css/app.css">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23154e7a'/%3E%3Cpath d='M9 17l5 5 9-11' stroke='white' stroke-width='3.2' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+</head>
+<body>
+<header th:fragment="nav(active)" class="topbar">
+  <div class="wrap topbar-in">
+    <a class="brand" href="/"><span class="logo" aria-hidden="true"></span>SolutionDesk</a>
+    <nav aria-label="Main">
+      <span class="nav-group">Learning platform</span>
+      <a th:classappend="${active == 'learn'} ? 'on'" href="/learn">Learner view</a>
+      <a th:classappend="${active == 'import'} ? 'on'" href="/admin/import">Course packages</a>
+      <span class="nav-group">Support desk</span>
+      <a th:classappend="${active == 'tickets'} ? 'on'" href="/support/tickets">Tickets</a>
+      <a th:classappend="${active == 'logs'} ? 'on'" href="/support/logs">Log analysis</a>
+      <a th:classappend="${active == 'diag'} ? 'on'" href="/support/diagnostics">SQL diagnostics</a>
+      <a th:classappend="${active == 'kb'} ? 'on'" href="/support/kb">Knowledge base</a>
+    </nav>
+  </div>
+</header>
+<footer th:fragment="footer" class="footer">
+  <div class="wrap">SolutionDesk · AI project by Amrina · Sample data only, reset on every restart ·
+    <a href="https://sayamrina.github.io/solutiondesk/">Project page</a> · <a href="https://sayamrina.github.io/">Portfolio</a></div>
+</footer>
+<span th:fragment="prio(p)" class="prio" th:classappend="${'p' + p.substring(1)}" th:text="${p}">P3</span>
+<span th:fragment="status(s)" class="status" th:classappend="${'s-' + s.name().toLowerCase()}" th:text="${s.label()}">New</span>
+</body>
+</html>

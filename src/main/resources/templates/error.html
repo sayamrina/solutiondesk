@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:replace="~{fragments/layout :: head('Error')}"></head>
+<body>
+<header th:replace="~{fragments/layout :: nav('')}"></header>
+<main class="wrap">
+  <div class="card errorbox">
+    <p class="code" th:text="${code.code()}">SD-XXX</p>
+    <h1 th:text="${code.code() == 'SD-SYS-500'} ? 'Something went wrong' : 'That did not work'">Error</h1>
+    <p th:text="${message}">message</p>
+    <p class="small muted">If you contact support, please quote this request ID:</p>
+    <p><span class="refid" th:text="${requestId}">abcd1234</span></p>
+    <div class="row" style="justify-content:center;margin-top:18px">
+      <a class="btn ghost small" href="javascript:history.back()">Go back</a>
+      <a class="btn small" th:href="@{/support/logs/request/{id}(id=${requestId})}">Support view: request trail</a>
+      <a class="btn ghost small" th:href="@{/support/kb/{s}(s=${code.kbSlug()})}">Knowledge base article</a>
+    </div>
+  </div>
+</main>
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+</body>
+</html>

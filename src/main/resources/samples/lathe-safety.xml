@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<manifest identifier="TMB-MS-301" version="1.2">
+  <metadata>
+    <title>Safe Work at the Lathe</title>
+    <description>Protective equipment, chuck key rules and what to do when chips wrap around the workpiece.</description>
+    <targetGroup>Fertigung</targetGroup>
+    <status>published</status>
+  </metadata>
+  <organization>
+    <item identifierref="m1" title="Protective equipment"/>
+    <item identifierref="m2" title="Before you start the machine"/>
+    <item identifierref="m3" title="Chips and cleaning"/>
+  </organization>
+  <resources>
+    <resource identifier="m1" href="ppe.html"><content><![CDATA[<p>Safety glasses and close-fitting clothing. <strong>No gloves</strong> near rotating parts: they can be caught and pull the hand in.</p>]]></content></resource>
+    <resource identifier="m2" href="start.html"><content><![CDATA[<p>Never leave the chuck key in the chuck. Check that the workpiece is clamped and the guard is closed.</p>]]></content></resource>
+    <resource identifier="m3" href="chips.html"><content><![CDATA[<p>Stop the machine before removing chips. Use a chip hook, never your hands.</p>]]></content></resource>
+  </resources>
+  <assessment passScore="80">
+    <question correct="1"><text>Why are gloves forbidden near rotating parts?</text><option>They are expensive</option><option>They can be caught and pull the hand in</option><option>They reduce grip</option></question>
+    <question correct="0"><text>Where does the chuck key belong when the machine starts?</text><option>Not in the chuck</option><option>In the chuck</option></question>
+    <question correct="2"><text>How do you remove wrapped chips?</text><option>By hand while running</option><option>With compressed air while running</option><option>Machine stopped, with a chip hook</option></question>
+  </assessment>
+</manifest>

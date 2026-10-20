@@ -1,0 +1,10 @@
+<article data-code="SD-IMP-003" data-title="Lesson points to a resource that does not exist" data-summary="An item's identifierref does not match any resource identifier. Identifiers are case-sensitive.">
+<h2>Symptom</h2>
+<p>The import stops with <code>SD-IMP-003</code>: <em>item '…' points to resource '…', which does not exist</em>.</p>
+<h2>Cause</h2>
+<p>Each <code>&lt;item identifierref="x"&gt;</code> must match a <code>&lt;resource identifier="x"&gt;</code> exactly. Identifiers are <strong>case-sensitive</strong>: <code>f2</code> and <code>F2</code> are different. Some authoring tools ignore case in their preview, so the problem only appears on import.</p>
+<h2>How to check</h2>
+<ol><li>Search the manifest for the identifier named in the error.</li><li>Compare upper and lower case, and look for a resource that was renamed or deleted.</li></ol>
+<h2>Solution</h2>
+<p>Make the reference and the resource identifier identical, then import again.</p>
+</article>

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:replace="~{fragments/layout :: head(${course.title()})}"></head>
+<body>
+<header th:replace="~{fragments/layout :: nav('learn')}"></header>
+<main class="wrap">
+  <p class="small"><a th:href="@{/learn(learner=${learner.id()})}">← My courses</a></p>
+  <span class="tag" th:text="${course.code()}">CODE</span>
+  <h1 style="margin-top:8px" th:text="${course.title()}">Title</h1>
+  <p class="lead" th:if="${course.description() != null}" th:text="${course.description()}">description</p>
+  <p class="small muted">Enrollment valid until <strong th:text="${enrollment.validUntil()}">date</strong></p>
+
+  <div class="two-col" style="margin-top:18px">
+    <div class="card">
+      <div class="lesson" th:each="l : ${lessons}">
+        <h3 th:text="|${l.position()}. ${l.title()}|">Lesson</h3>
+        <div th:utext="${l.body()}">body</div>
+      </div>
+
+      <h2 id="quiz">Final quiz</h2>
+      <div th:if="${result != null}" class="notice" th:classappend="${result.passed()} ? 'ok' : 'warn'" style="margin-bottom:12px">
+        <strong th:text="${result.passed()} ? 'Passed' : 'Not passed yet'">Passed</strong> ·
+        <span th:text="|${result.correct()} of ${result.total()} correct · ${result.scorePercent()} %|">score</span>
+        <span class="small">(pass mark 80 %)</span>
+      </div>
+      <form method="post" th:action="@{/learn/{l}/courses/{c}/quiz(l=${learner.id()},c=${course.id()})}" th:if="${!questions.isEmpty()}">
+        <div class="q" th:each="q : ${questions}">
+          <strong th:text="|${q.position()}. ${q.text()}|">Question</strong>
+          <label th:each="o, s : ${q.options()}">
+            <input type="radio" th:name="|q${q.id()}|" th:value="${s.index}"> <span th:text="${o}">option</span>
+          </label>
+        </div>
+        <p><button class="btn" type="submit">Submit answers</button></p>
+      </form>
+    </div>
+    <aside class="card">
+      <p class="box-title">My results</p>
+      <p class="small muted" th:if="${attempts.isEmpty()}">No saved results yet.</p>
+      <ul class="small" style="padding-left:18px">
+        <li th:each="a : ${attempts}" th:text="|${@fmt.dt(a.submittedAt())}: ${a.scorePercent()} % (${a.correct()}/${a.total()})|">result</li>
+      </ul>
+    </aside>
+  </div>
+</main>
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+</body>
+</html>

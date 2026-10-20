@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<manifest identifier="VLG-FL-102" version="1.2">
+  <metadata>
+    <title>Forklift Refresher</title>
+    <description>Annual refresher for forklift drivers.</description>
+    <targetGroup>Disposition</targetGroup>
+    <status>published</status>
+  </metadata>
+  <organization>
+    <item identifierref="f1" title="Stability triangle"/>
+    <item identifierref="f2" title="Load diagram"/>
+  </organization>
+  <resources>
+    <resource identifier="f1" href="stability.html"><content><![CDATA[<p>Keep the combined centre of gravity inside the stability triangle.</p>]]></content></resource>
+    <resource identifier="F2" href="load-diagram.html"><content><![CDATA[<p>Read the load diagram before lifting.</p>]]></content></resource>
+  </resources>
+</manifest>

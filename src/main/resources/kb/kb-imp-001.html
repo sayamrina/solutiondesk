@@ -1,0 +1,10 @@
+<article data-code="SD-IMP-001" data-title="Course package is not well-formed XML" data-summary="A tag is not closed, an attribute quote is missing or a character like &amp; is not escaped.">
+<h2>Symptom</h2>
+<p>The import stops with <code>SD-IMP-001</code> and names a line and column.</p>
+<h2>Cause</h2>
+<ul><li>An element is opened but never closed, or closed in the wrong order.</li><li>An attribute value is missing a quote.</li><li>A bare <code>&amp;</code> or <code>&lt;</code> appears in text outside a CDATA section.</li></ul>
+<h2>How to check</h2>
+<ol><li>Open the request trail of the ticket's request ID: the log line contains the parser message, line and column.</li><li>Open the file in an XML editor and go to the line before the reported one: the real mistake is often there, because the parser only notices it at the next tag.</li></ol>
+<h2>Workaround / solution</h2>
+<p>Fix the tag structure and import again. If the package comes from an authoring tool, export it again and report the problem to the tool vendor.</p>
+</article>

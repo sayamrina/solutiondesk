@@ -1,0 +1,10 @@
+<article data-code="SD-UPL-001" data-title="Upload too large" data-summary="The package is larger than the server's upload limit (256 KB). Changing the limit is a hosting decision.">
+<h2>Symptom</h2>
+<p>The upload stops with <code>SD-UPL-001</code> and HTTP status 413.</p>
+<h2>Cause</h2>
+<p>The server accepts course packages up to <strong>256 KB</strong> (<code>spring.servlet.multipart.max-file-size</code>). Large packages usually contain embedded images or videos.</p>
+<h2>Workaround</h2>
+<p>Import the course without embedded media and link the media from the media server instead.</p>
+<h2>Escalation</h2>
+<p>Raising the limit affects memory and storage on the server: escalate to <strong>Hosting</strong> with the request ID, the file size and the customer's reason.</p>
+</article>

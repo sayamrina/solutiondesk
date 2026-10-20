@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<manifest identifier="KWM-HY-201" version="1.2">
+  <metadata>
+    <title>Hand Hygiene on the Ward</title>
+    <description>The five moments for hand hygiene, the right technique and how long disinfection takes to work.</description>
+    <targetGroup>Pflege</targetGroup>
+    <status>published</status>
+  </metadata>
+  <organization>
+    <item identifierref="h1" title="The five moments"/>
+    <item identifierref="h2" title="Technique and contact time"/>
+  </organization>
+  <resources>
+    <resource identifier="h1" href="moments.html"><content><![CDATA[<p>Before patient contact, before aseptic tasks, after contact with body fluids, after patient contact and after touching the patient's surroundings.</p>]]></content></resource>
+    <resource identifier="h2" href="technique.html"><content><![CDATA[<p>Use enough disinfectant to keep both hands wet for the full <strong>30 seconds</strong>. Fingertips and thumbs are the areas most often missed.</p>]]></content></resource>
+  </resources>
+  <assessment passScore="80">
+    <question correct="1"><text>How long must hands stay wet with disinfectant?</text><option>5 seconds</option><option>30 seconds</option><option>5 minutes</option></question>
+    <question correct="2"><text>Which areas are missed most often?</text><option>Palms</option><option>Wrists</option><option>Fingertips and thumbs</option></question>
+    <question correct="0"><text>Is hand hygiene needed after touching the patient's surroundings?</text><option>Yes</option><option>No</option></question>
+  </assessment>
+</manifest>

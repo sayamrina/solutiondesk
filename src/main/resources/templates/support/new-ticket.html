@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:replace="~{fragments/layout :: head('New ticket')}"></head>
+<body>
+<header th:replace="~{fragments/layout :: nav('tickets')}"></header>
+<main class="wrap">
+  <p class="small"><a href="/support/tickets">← Tickets</a></p>
+  <h1>New ticket</h1>
+  <p class="lead">Record a customer report. Adding the error code and request ID from the error page links the ticket to the log and the knowledge base.</p>
+  <form method="post" action="/support/tickets" class="card" style="max-width:760px">
+    <div class="field"><label for="c">Customer</label>
+      <select id="c" name="customerId"><option th:each="c : ${customers}" th:value="${c['ID']}" th:text="${c['NAME']}">c</option></select></div>
+    <div class="field"><label for="s">Summary</label><input id="s" name="summary" maxlength="200" required placeholder="What does not work, for whom?"></div>
+    <div class="field"><label for="d">Description</label><textarea id="d" name="description" required placeholder="Steps, since when, how many users, screenshot text"></textarea></div>
+    <div class="grid g2">
+      <div class="field"><label for="i">Impact</label><select id="i" name="impact">
+        <option value="1">1 · many customers</option><option value="2">2 · one customer or a whole group</option><option value="3" selected>3 · a single user</option></select></div>
+      <div class="field"><label for="u">Urgency</label><select id="u" name="urgency">
+        <option value="1">1 · work is blocked</option><option value="2" selected>2 · work is harder</option><option value="3">3 · minor or a question</option></select></div>
+      <div class="field"><label for="e">Error code</label><select id="e" name="errorCode"><option value="">none</option>
+        <option th:each="x : ${codes}" th:value="${x}" th:text="${x}" th:selected="${x == code}">c</option></select></div>
+      <div class="field"><label for="r">Request ID</label><input id="r" name="requestId" th:value="${requestId}" placeholder="from the error page"></div>
+    </div>
+    <button class="btn">Create ticket</button>
+  </form>
+</main>
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+</body>
+</html>

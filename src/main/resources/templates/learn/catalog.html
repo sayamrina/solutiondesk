@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:replace="~{fragments/layout :: head('Learner view')}"></head>
+<body>
+<header th:replace="~{fragments/layout :: nav('learn')}"></header>
+<main class="wrap">
+  <div class="row spread">
+    <div>
+      <h1>My courses</h1>
+      <p class="lead" style="margin-bottom:0">Logged in as <strong th:text="${learner.name()}">Name</strong>
+        · <span th:text="${learner.customerName()}">Customer</span> · group <span class="tag team" th:text="${learner.groupName()}">group</span></p>
+    </div>
+    <form method="get" action="/learn" class="row">
+      <label for="learner" style="margin:0">View as</label>
+      <select id="learner" name="learner" onchange="this.form.submit()">
+        <option th:each="l : ${learners}" th:value="${l.id()}" th:selected="${l.id() == learner.id()}"
+                th:text="|${l.name()} (${l.customerName()}, ${l.groupName()})|">name</option>
+      </select>
+      <noscript><button class="btn small">Switch</button></noscript>
+    </form>
+  </div>
+
+  <div class="grid g3" style="margin-top:22px">
+    <div class="card course-card" th:each="card : ${catalog}" th:with="c=${card.course()}">
+      <span class="tag" th:text="${c.code()}">CODE</span>
+      <h3 style="margin-top:8px" th:text="${c.title()}">Title</h3>
+      <p class="small muted" th:text="${card.teaser()}">teaser</p>
+      <a class="btn small" th:href="@{/learn/{l}/courses/{c}(l=${learner.id()},c=${c.id()})}">Open course</a>
+    </div>
+    <div class="card" th:if="${catalog.isEmpty()}"><p class="muted">No courses in your catalog yet.</p></div>
+  </div>
+
+  <h2>Direct links</h2>
+  <p class="small muted">Links a colleague might send by e-mail. Some of these courses are not meant for this learner: that is how
+    many "course not available" tickets start.</p>
+  <div class="row">
+    <a class="btn ghost small" th:each="c : ${allCourses}" th:href="@{/learn/{l}/courses/{c}(l=${learner.id()},c=${c.id()})}"
+       th:text="${c.code()}">CODE</a>
+  </div>
+</main>
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+</body>
+</html>
