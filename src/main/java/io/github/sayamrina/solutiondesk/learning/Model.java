@@ -18,8 +18,9 @@ public final class Model {
             return "published".equalsIgnoreCase(status);
         }
 
-        /** Short text for the course card. */
+        /** Short text for the course card; empty when the manifest has no description (optional field, SD-106). */
         public String teaser() {
+            if (description == null || description.isBlank()) return "";
             String text = description.strip();
             return text.length() > 140 ? text.substring(0, 137) + "..." : text;
         }
