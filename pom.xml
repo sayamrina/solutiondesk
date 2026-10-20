@@ -10,7 +10,7 @@
   </parent>
   <groupId>io.github.sayamrina</groupId>
   <artifactId>solutiondesk</artifactId>
-  <version>1.0.0</version>
+  <version>1.0.1</version>
   <name>SolutionDesk</name>
   <description>Digital learning platform with an incident and support desk</description>
   <properties>

@@ -37,7 +37,9 @@ class WebTest {
     @Test
     void diagnosticExplainsTheHiddenCourse() throws Exception {
         mvc.perform(get("/support/diagnostics?check=course-visibility&email=s.richter@wendmoor.example&course_code=KWM-HY-201"))
-                .andExpect(content().string(containsString("group mismatch")));
+                // check the result cell, not the SQL text (which also contains the words)
+                .andExpect(content().string(containsString("<td class=\"verdict-bad\">group mismatch</td>")))
+                .andExpect(content().string(containsString("<td>Verwaltung</td>")));
     }
 
     @Test

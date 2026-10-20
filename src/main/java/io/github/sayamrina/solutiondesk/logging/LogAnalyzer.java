@@ -21,7 +21,7 @@ public class LogAnalyzer {
     private final Supplier<List<LogEvent>> source;
 
     public LogAnalyzer() {
-        this(LogBuffer::snapshot);
+        this(() -> LogBuffer.snapshot().stream().sorted(Comparator.comparing(LogEvent::timestamp)).toList());
     }
 
     LogAnalyzer(Supplier<List<LogEvent>> source) {

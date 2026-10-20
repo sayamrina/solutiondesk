@@ -37,8 +37,8 @@
           <table>
             <thead><tr><th th:each="col : ${result.columns()}" th:text="${col}">col</th></tr></thead>
             <tbody><tr th:each="r : ${result.rows()}">
-              <td th:each="col : ${result.columns()}" th:text="${r[col]}"
-                  th:classappend="${col == 'verdict'} ? (${r[col] == 'visible'} ? 'verdict-visible' : 'verdict-bad')">v</td>
+              <td th:each="col : ${result.columns()}" th:text="${r.get(col)}"
+                  th:classappend="${col == 'verdict' ? (r.get(col) == 'visible' ? 'verdict-visible' : 'verdict-bad') : ''}">v</td>
             </tr></tbody>
           </table>
         </div>

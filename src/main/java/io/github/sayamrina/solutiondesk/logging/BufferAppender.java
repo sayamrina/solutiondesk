@@ -11,9 +11,14 @@ import java.util.TreeMap;
 /** Logback appender that copies application events into {@link LogBuffer}. */
 public class BufferAppender extends AppenderBase<ILoggingEvent> {
 
+    public static final String SIMULATED_AT = "simulatedAt";
+
     @Override
     protected void append(ILoggingEvent event) {
         Map<String, String> fields = new TreeMap<>(event.getMDCPropertyMap());
+        // the demo's sample traffic sets the time at which a simulated request happened
+        String simulatedAt = fields.remove(SIMULATED_AT);
+        Instant at = simulatedAt == null ? Instant.ofEpochMilli(event.getTimeStamp()) : Instant.ofEpochMilli(Long.parseLong(simulatedAt));
         String exception = "";
         String stackTop = "";
         IThrowableProxy t = event.getThrowableProxy();
@@ -27,7 +32,7 @@ public class BufferAppender extends AppenderBase<ILoggingEvent> {
                 }
             }
         }
-        LogBuffer.add(new LogEvent(Instant.ofEpochMilli(event.getTimeStamp()), event.getLevel().toString(),
+        LogBuffer.add(new LogEvent(at, event.getLevel().toString(),
                 event.getLoggerName(), event.getFormattedMessage(), fields, exception, stackTop));
     }
 }

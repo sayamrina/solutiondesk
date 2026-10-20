@@ -22,7 +22,7 @@
       </div>
       <div class="logline" th:text="${e.message()}">message</div>
       <div class="logline muted small" th:text="${e.fields()}">fields</div>
-      <div class="logline" th:if="${!e.exception().isEmpty()}" style="color:var(--bad)" th:text="${e.exception()} + '\n  at ' + ${e.stackTop()}">ex</div>
+      <div class="logline logpre" th:if="${!e.exception().isEmpty()}" style="color:var(--bad)" th:text="${e.exception()} + '\n  at ' + ${e.stackTop()}">ex</div>
     </div>
   </div>
 </main>

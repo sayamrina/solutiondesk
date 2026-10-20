@@ -1,0 +1,6 @@
+services:
+  - type: web
+    name: solutiondesk
+    runtime: docker
+    plan: free
+    healthCheckPath: /actuator/health

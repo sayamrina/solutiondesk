@@ -7,6 +7,7 @@ import io.github.sayamrina.solutiondesk.learning.LearningRepository;
 import io.github.sayamrina.solutiondesk.learning.LearningService;
 import io.github.sayamrina.solutiondesk.learning.Model.Course;
 import io.github.sayamrina.solutiondesk.learning.Model.Question;
+import io.github.sayamrina.solutiondesk.logging.BufferAppender;
 import io.github.sayamrina.solutiondesk.logging.IncidentLogger;
 import io.github.sayamrina.solutiondesk.logging.RequestIdFilter;
 import io.github.sayamrina.solutiondesk.support.Priority;
@@ -74,30 +75,31 @@ public class SampleData implements ApplicationRunner {
         historicAttemptsFromRelease100();
 
         // normal use
-        openAndPass(1, "VLG-LS-101");
-        openAndPass(3, "KWM-HY-201");
-        openAndPass(5, "TMB-MS-301");
-        request("POST", "/learn/6/courses/" + id("TMB-MS-301") + "/quiz",
+        openAndPass(Duration.ofMinutes(150), 1, "VLG-LS-101");
+        openAndPass(Duration.ofMinutes(135), 3, "KWM-HY-201");
+        openAndPass(Duration.ofMinutes(120), 5, "TMB-MS-301");
+        request(Duration.ofMinutes(95), "POST", "/learn/6/courses/" + id("TMB-MS-301") + "/quiz",
                 () -> service.submitQuiz(6, id("TMB-MS-301"), Map.of(firstQuestion("TMB-MS-301"), 1)));
+        importSample(Duration.ofMinutes(88), "supplier-doctype.xml");
+        importSample(Duration.ofMinutes(80), "night-shift-missing-title.xml");
 
-        // what customers will call about
+        // what customers will call about (each a few minutes before the ticket was opened)
+        String tooLarge = request(Duration.ofMinutes(62), "POST", "/admin/import/upload",
+                () -> importer.importPackage("machine-safety-video-course.xml", new byte[600 * 1024]));
         String quizExpired = null;
-        for (int i = 0; i < 3; i++) {
-            quizExpired = request("POST", "/learn/2/courses/" + id("VLG-LS-101") + "/quiz",
+        for (int minutes : new int[] {58, 52, 47}) {
+            quizExpired = request(Duration.ofMinutes(minutes), "POST", "/learn/2/courses/" + id("VLG-LS-101") + "/quiz",
                     () -> service.submitQuiz(2, id("VLG-LS-101"), allCorrect("VLG-LS-101")));
         }
         String notVisible = null;
-        for (int i = 0; i < 2; i++) {
-            notVisible = request("GET", "/learn/4/courses/" + id("KWM-HY-201"), () -> service.openCourse(4, id("KWM-HY-201")));
+        for (int minutes : new int[] {34, 29}) {
+            notVisible = request(Duration.ofMinutes(minutes), "GET", "/learn/4/courses/" + id("KWM-HY-201"),
+                    () -> service.openCourse(4, id("KWM-HY-201")));
         }
         String notWellFormed = null;
-        for (int i = 0; i < 2; i++) {
-            notWellFormed = importSample("fire-safety-not-well-formed.xml");
+        for (int minutes : new int[] {19, 14}) {
+            notWellFormed = importSample(Duration.ofMinutes(minutes), "fire-safety-not-well-formed.xml");
         }
-        String tooLarge = request("POST", "/admin/import/upload",
-                () -> importer.importPackage("machine-safety-video-course.xml", new byte[600 * 1024]));
-        importSample("supplier-doctype.xml");
-        importSample("night-shift-missing-title.xml");
 
         seedTickets(quizExpired, notVisible, notWellFormed, tooLarge);
     }
@@ -118,20 +120,21 @@ public class SampleData implements ApplicationRunner {
         return answers;
     }
 
-    private void openAndPass(long learnerId, String code) {
-        request("GET", "/learn/" + learnerId + "/courses/" + id(code), () -> service.openCourse(learnerId, id(code)));
-        request("POST", "/learn/" + learnerId + "/courses/" + id(code) + "/quiz",
+    private void openAndPass(Duration ago, long learnerId, String code) {
+        request(ago, "GET", "/learn/" + learnerId + "/courses/" + id(code), () -> service.openCourse(learnerId, id(code)));
+        request(ago.minusMinutes(6), "POST", "/learn/" + learnerId + "/courses/" + id(code) + "/quiz",
                 () -> service.submitQuiz(learnerId, id(code), allCorrect(code)));
     }
 
-    private String importSample(String name) {
+    private String importSample(Duration ago, String name) {
         var p = samples.get(name);
-        return request("POST", "/admin/import/sample", () -> importer.importPackage(p.name(), p.bytes()));
+        return request(ago, "POST", "/admin/import/sample", () -> importer.importPackage(p.name(), p.bytes()));
     }
 
     /** Runs an action the way the web layer does: request ID in the log context, errors logged, access line. */
-    private String request(String method, String path, Runnable action) {
+    private String request(Duration ago, String method, String path, Runnable action) {
         String requestId = RequestIdFilter.newRequestId();
+        MDC.put(BufferAppender.SIMULATED_AT, String.valueOf(clock.instant().minus(ago).toEpochMilli()));
         MDC.put("requestId", requestId);
         MDC.put("method", method);
         MDC.put("path", path);
