@@ -9,7 +9,8 @@ public final class ScoreCalculator {
 
     public static int percent(int correct, int total) {
         if (total <= 0) return 0;
-        return (correct / total) * 100;
+        // multiply first: (correct / total) * 100 is 0 for every result below 100 % in integer arithmetic (SD-105)
+        return correct * 100 / total;
     }
 
     public static boolean passed(int percent) {
