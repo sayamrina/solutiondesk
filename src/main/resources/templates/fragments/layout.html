@@ -13,10 +13,9 @@
   <div class="wrap topbar-in">
     <a class="brand" href="/"><span class="logo" aria-hidden="true"></span>SolutionDesk</a>
     <nav aria-label="Main">
-      <a class="nav-group" href="/learn" title="Learning platform: start with the learner view">Learning platform</a>
       <a th:classappend="${active == 'learn'} ? 'on'" href="/learn">Learner view</a>
       <a th:classappend="${active == 'import'} ? 'on'" href="/admin/import">Course packages</a>
-      <a class="nav-group" href="/support/tickets" title="Support desk: start with the tickets">Support desk</a>
+      <span class="nav-sep" aria-hidden="true"></span>
       <a th:classappend="${active == 'tickets'} ? 'on'" href="/support/tickets">Tickets</a>
       <a th:classappend="${active == 'logs'} ? 'on'" href="/support/logs">Log analysis</a>
       <a th:classappend="${active == 'diag'} ? 'on'" href="/support/diagnostics">SQL diagnostics</a>
