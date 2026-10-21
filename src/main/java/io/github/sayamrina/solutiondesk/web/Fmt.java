@@ -35,6 +35,13 @@ public class Fmt {
         return human(d) + " ago";
     }
 
+    /** "in 3 h" before the due time, "3 h over" after it. */
+    public String dueIn(Instant due) {
+        if (due == null) return "";
+        Duration d = Duration.between(clock.instant(), due);
+        return d.isNegative() ? human(d.negated()) + " over" : "in " + human(d);
+    }
+
     public boolean overdue(Instant due) {
         return due != null && clock.instant().isAfter(due);
     }

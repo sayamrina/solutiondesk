@@ -62,6 +62,20 @@ public class TicketService {
         return touch(t);
     }
 
+    /** A message to the customer. Unlike an internal note it counts as a response for the SLA. */
+    @Transactional
+    public Ticket reply(String key, String actor, String text) {
+        Ticket t = get(key);
+        require(!text.isBlank(), "reply must not be empty");
+        require(t.status() != Status.CLOSED, "closed tickets cannot be answered");
+        repository.addEvent(t.id(), clock.instant(), actor, "reply", text.strip());
+        return touch(t);
+    }
+
+    public Sla sla(Ticket t) {
+        return Sla.of(t, repository.firstResponseAt(t.id()), clock.instant());
+    }
+
     @Transactional
     public Ticket reprioritise(String key, String actor, int impact, int urgency) {
         Ticket t = get(key);

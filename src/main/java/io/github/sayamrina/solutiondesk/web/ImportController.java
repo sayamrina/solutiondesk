@@ -1,6 +1,7 @@
 package io.github.sayamrina.solutiondesk.web;
 
 import io.github.sayamrina.solutiondesk.learning.CourseImportService;
+import io.github.sayamrina.solutiondesk.learning.CoursePackage;
 import io.github.sayamrina.solutiondesk.learning.LearningRepository;
 import io.github.sayamrina.solutiondesk.web.SamplePackages.SamplePackage;
 import java.io.IOException;
@@ -33,17 +34,27 @@ public class ImportController {
     }
 
     @PostMapping("/admin/import/sample")
-    public String importSample(@RequestParam String name, RedirectAttributes redirect) throws IOException {
+    public String importSample(@RequestParam String name, @RequestParam(defaultValue = "import") String mode,
+                               RedirectAttributes redirect) {
         SamplePackage p = samples.get(name);
-        importer.importPackage(p.name(), p.bytes());
-        redirect.addFlashAttribute("imported", p.name());
-        return "redirect:/admin/import";
+        return run(p.name(), p.bytes(), mode, redirect);
     }
 
     @PostMapping("/admin/import/upload")
-    public String upload(@RequestParam("file") MultipartFile file, RedirectAttributes redirect) throws IOException {
-        importer.importPackage(file.getOriginalFilename(), file.getBytes());
-        redirect.addFlashAttribute("imported", file.getOriginalFilename());
+    public String upload(@RequestParam("file") MultipartFile file, @RequestParam(defaultValue = "import") String mode,
+                         RedirectAttributes redirect) throws IOException {
+        return run(file.getOriginalFilename(), file.getBytes(), mode, redirect);
+    }
+
+    private String run(String name, byte[] bytes, String mode, RedirectAttributes redirect) {
+        if (mode.equals("validate")) {
+            CoursePackage p = importer.validate(name, bytes);
+            redirect.addFlashAttribute("validated", name + ": valid, " + p.code() + " \"" + p.title() + "\" with "
+                    + p.lessons().size() + " lessons and " + p.questions().size() + " questions. Nothing was imported.");
+        } else {
+            importer.importPackage(name, bytes);
+            redirect.addFlashAttribute("imported", name);
+        }
         return "redirect:/admin/import";
     }
 }

@@ -24,6 +24,15 @@ public class CourseImportService {
     }
 
     public long importPackage(String fileName, byte[] xml) {
+        CoursePackage pkg = validate(fileName, xml);
+        long id = repository.insertCourse(pkg, clock.instant());
+        log.info("course imported: {} ({}) with {} lessons and {} questions from {}", pkg.code(), pkg.title(),
+                pkg.lessons().size(), pkg.questions().size(), fileName);
+        return id;
+    }
+
+    /** Runs every import check without storing anything (dry run). */
+    public CoursePackage validate(String fileName, byte[] xml) {
         if (xml.length > MAX_PACKAGE_BYTES) {
             throw new SolutionDeskException(ErrorCode.UPLOAD_TOO_LARGE,
                     "package '" + fileName + "' has " + xml.length / 1024 + " KB, limit is " + MAX_PACKAGE_BYTES / 1024 + " KB",
@@ -39,9 +48,6 @@ public class CourseImportService {
             throw new SolutionDeskException(ErrorCode.IMPORT_DUPLICATE,
                     fileName + ": a course with identifier '" + pkg.code() + "' already exists", pkg.code());
         }
-        long id = repository.insertCourse(pkg, clock.instant());
-        log.info("course imported: {} ({}) with {} lessons and {} questions from {}", pkg.code(), pkg.title(),
-                pkg.lessons().size(), pkg.questions().size(), fileName);
-        return id;
+        return pkg;
     }
 }

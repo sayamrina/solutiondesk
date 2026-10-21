@@ -14,16 +14,16 @@ A small digital learning platform and the support desk behind it. Learners take 
 |---|---|
 | **Java** | Spring Boot 3 application (Java 21): services, JDBC repositories, controllers, error handling |
 | **SQL** | Schema with constraints and indexes, plain SQL repositories, six parameterised diagnostic queries |
-| **XML** | Course package importer: encoding check, well-formedness, required fields, item/resource references, DOCTYPE/XXE blocked |
+| **XML** | Course package importer with a *validate only* dry run: encoding check, well-formedness, required fields, item/resource references, DOCTYPE/XXE blocked |
 | **HTML / CSS** | Server-rendered Thymeleaf pages, responsive layout, accessible forms |
 | **Log and error analysis** | logfmt logs with request ID, error code, owner team, path, status and duration; error groups, search and request trails |
-| **Incident handling (Jira-style)** | Tickets with impact × urgency priority, first-response targets, workflow rules, escalation, root cause / workaround / resolution, Jira CSV export |
+| **Incident handling (Jira-style)** | Support dashboard, tickets with impact × urgency priority, first-response SLA (met, due, overdue), filters, internal notes vs. replies to the customer, workflow rules, escalation, root cause / workaround / resolution, Jira CSV export |
 | **Knowledge base** | One article per error code: symptom, cause, how to check, workaround, when to escalate |
 | **Working with other teams** | Each error code has an owner (Support, Hosting, Development); escalation needs a note with the evidence |
 
 ## How to use it (about six minutes)
 
-1. **See the problem as a learner:** open *Learner view*, switch to *Sam Richter* and click the course link `KWM-HY-201`. The error page shows `SD-CRS-001` and a request ID.
+1. **See the problem as the learner:** open *Learner view*, choose *Sam Richter* in the support bar and test the course link `KWM-HY-201`. The error page shows `SD-CRS-001` and a request ID.
 2. **Pick up the ticket:** in *Tickets*, open **SD-104**. The request trail shows the reason from the log.
 3. **Confirm with SQL:** the knowledge base article links to the diagnostic *Why can't a learner see a course?*. Its verdict column says `group mismatch`.
 4. **Resolve:** move the ticket to *In analysis*, then *Resolved*, with root cause and resolution. The rules refuse a resolution without a root cause.
@@ -56,7 +56,7 @@ The two code bugs (SD-105, SD-106) were **planted on purpose** in the first comm
 ```bash
 # Java 21 and Maven
 mvn spring-boot:run          # http://127.0.0.1:8090
-mvn verify                   # 37 tests
+mvn verify                   # 43 tests
 
 # or with Docker
 docker build -t solutiondesk .

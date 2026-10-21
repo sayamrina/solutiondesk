@@ -1,50 +1,80 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
-<head th:replace="~{fragments/layout :: head('Overview')}"></head>
+<head th:replace="~{fragments/layout :: head('Dashboard')}"></head>
 <body>
 <header th:replace="~{fragments/layout :: nav('home')}"></header>
 <main class="wrap">
-  <h1>SolutionDesk</h1>
-  <p class="lead">A small digital learning platform and the support desk behind it. Learners take courses and quizzes; support analyses
-    incidents with structured logs, SQL diagnostics and a knowledge base, and hands problems over to Hosting or Development when needed.</p>
-
-  <div class="grid g4">
-    <a class="card kpi" href="/support/tickets" style="text-decoration:none;color:inherit"><b th:text="${openTickets}">4</b><span>open tickets</span></a>
-    <a class="card kpi" href="/support/tickets" style="text-decoration:none;color:inherit"><b th:text="${urgentTickets}">1</b><span>open with priority P1 or P2</span></a>
-    <a class="card kpi" href="/support/logs" style="text-decoration:none;color:inherit"><b th:text="${errorEvents}">12</b><span th:text="|logged errors in ${errorGroups} groups|">errors</span></a>
-    <a class="card kpi" href="/learn" style="text-decoration:none;color:inherit"><b th:text="${courses}">4</b><span th:text="|courses for ${learners} learners|">courses</span></a>
+  <div class="row spread">
+    <div><h1>Support dashboard</h1><p class="lead" style="margin-bottom:0">Open incidents, first-response targets and the errors behind them.</p></div>
+    <a class="btn small" href="/support/tickets/new">New ticket</a>
   </div>
 
-  <h2>Try it in five minutes</h2>
-  <div class="grid g3">
-    <div class="card"><h3>1 · See the problem as a learner</h3>
-      <p class="small muted">Open the learner view as <em>Sam Richter</em> and try the hand hygiene course, or as <em>Mira Kowalski</em> and submit the quiz.
-        Every error page shows an error code and a request ID.</p>
-      <a class="btn ghost small" href="/learn?learner=4">Open learner view</a></div>
-    <div class="card"><h3>2 · Analyse it as support</h3>
-      <p class="small muted">Pick a new ticket, open its request trail, run the matching SQL diagnostic and read the knowledge base article.</p>
-      <a class="btn ghost small" href="/support/tickets">Open tickets</a></div>
-    <div class="card"><h3>3 · Solve or escalate</h3>
-      <p class="small muted">Document root cause, workaround and resolution, or escalate to Hosting or Development with the evidence.
-        Export everything as a Jira CSV.</p>
-      <a class="btn ghost small" href="/support/kb">Knowledge base</a></div>
+  <div class="grid g4" style="margin-top:20px">
+    <a class="card kpi kpi-link" href="/support/tickets"><b th:text="${openCount}">4</b><span>open tickets</span></a>
+    <a class="card kpi kpi-link" href="/support/tickets"><b th:text="${awaitingResponse}">2</b><span>waiting for a first response</span></a>
+    <a class="card kpi kpi-link" href="/support/tickets" th:classappend="${overdue > 0} ? 'kpi-bad'"><b th:text="${overdue}">0</b><span>first responses overdue</span></a>
+    <a class="card kpi kpi-link" href="/support/logs"><b th:text="${errorEvents}">11</b><span>errors logged in the last 24 h</span></a>
   </div>
 
-  <h2>Open tickets</h2>
-  <div class="table-wrap">
-    <table>
-      <thead><tr><th>Key</th><th>Priority</th><th>Summary</th><th>Customer</th><th>Status</th><th>Created</th></tr></thead>
-      <tbody>
-      <tr th:each="t : ${recent}">
-        <td><a th:href="@{/support/tickets/{k}(k=${t.key()})}" th:text="${t.key()}" class="mono">SD-108</a></td>
-        <td><span th:replace="~{fragments/layout :: prio(${t.priority()})}"></span></td>
-        <td th:text="${t.summary()}">summary</td>
-        <td th:text="${t.customerName()}">customer</td>
-        <td><span th:replace="~{fragments/layout :: status(${t.status()})}"></span></td>
-        <td class="small muted" th:text="${@fmt.ago(t.createdAt())}">10 min ago</td>
-      </tr>
-      </tbody>
-    </table>
+  <div class="two-col" style="margin-top:22px">
+    <div class="stack">
+      <div>
+        <h2 style="margin-top:0">Needs attention</h2>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Ticket</th><th>Priority</th><th>Summary</th><th>Status</th><th>First response</th></tr></thead>
+            <tbody>
+            <tr th:each="r : ${open}" th:with="t=${r.ticket()}">
+              <td><a class="mono" th:href="@{/support/tickets/{k}(k=${t.key()})}" th:text="${t.key()}">SD-1</a></td>
+              <td><span th:replace="~{fragments/layout :: prio(${t.priority()})}"></span></td>
+              <td><span th:text="${t.summary()}">summary</span><div class="small muted" th:text="${t.customerName()}">customer</div></td>
+              <td><span th:replace="~{fragments/layout :: status(${t.status()})}"></span></td>
+              <td><span th:replace="~{fragments/layout :: sla(${r.sla()})}"></span></td>
+            </tr>
+            <tr th:if="${open.isEmpty()}"><td colspan="5" class="muted">No open tickets.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div>
+        <h2>Errors in the last 24 hours</h2>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Error code</th><th>Events</th><th>Owner</th><th>Latest</th></tr></thead>
+            <tbody>
+            <tr th:each="g : ${errors}">
+              <td><a th:href="@{/support/logs(q=${g.errorCode()})}"><span class="tag" th:text="${g.errorCode()}">code</span></a></td>
+              <td th:text="${g.count()}">3</td>
+              <td><span class="tag team" th:text="${#strings.capitalize(#strings.toLowerCase(g.team()))}">Support</span></td>
+              <td class="small"><span th:text="${g.sample()}">msg</span><div class="muted" th:text="${@fmt.ago(g.lastSeen())}">ago</div></td>
+            </tr>
+            <tr th:if="${errors.isEmpty()}"><td colspan="4" class="muted">No errors.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <aside class="stack">
+      <div class="card">
+        <p class="box-title">Recent activity</p>
+        <ul class="timeline">
+          <li th:each="a : ${activity}" th:classappend="${'k-' + a.kind()}">
+            <div class="meta"><a class="mono" th:href="@{/support/tickets/{k}(k=${a.ticketKey()})}" th:text="${a.ticketKey()}">k</a>
+              · <span th:text="${a.actor()}">actor</span> · <span th:text="${@fmt.ago(a.at())}">ago</span></div>
+            <div class="small clamp" th:text="${a.text()}">text</div>
+          </li>
+        </ul>
+      </div>
+      <div class="card">
+        <p class="box-title">Platform</p>
+        <dl class="facts">
+          <dt>Courses</dt><dd><a href="/admin/import" th:text="${courses}">4</a></dd>
+          <dt>Learners</dt><dd><a href="/learn" th:text="${learners}">6</a></dd>
+          <dt>Escalated</dt><dd th:text="${escalated}">1</dd>
+          <dt>Health</dt><dd><a href="/actuator/health">status</a></dd>
+        </dl>
+      </div>
+    </aside>
   </div>
 </main>
 <footer th:replace="~{fragments/layout :: footer}"></footer>

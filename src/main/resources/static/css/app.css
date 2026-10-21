@@ -84,6 +84,7 @@ tbody tr:hover td { background: #fafbfd; }
 .notice.info { background: var(--info-soft); border-color: #bcd3ee; color: #173f6e; }
 
 /* ticket page */
+.two-col.diag { grid-template-columns: 300px minmax(0, 1fr); }
 .two-col { display: grid; grid-template-columns: minmax(0, 1fr) 330px; gap: 18px; align-items: start; }
 .facts { display: grid; grid-template-columns: 120px 1fr; gap: 6px 10px; font-size: 14px; }
 .facts dt { color: var(--muted); }
@@ -114,7 +115,7 @@ details summary { cursor: pointer; color: var(--brand); font-weight: 600; }
 @media (max-width: 1100px) { .topbar nav { margin-left: 0; } }
 @media (max-width: 640px) { .nav-sep { display: none; } }
 @media (max-width: 900px) {
-  .two-col, .g2, .g3, .g4 { grid-template-columns: 1fr; }
+  .two-col, .two-col.diag, .g2, .g3, .g4 { grid-template-columns: minmax(0, 1fr); }
 }
 a.mono, td.mono, .tag { white-space: nowrap; }
 
@@ -128,3 +129,15 @@ a.mono, td.mono, .tag { white-space: nowrap; }
 .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 main.wrap { padding-top: 22px; }
 @media (max-width: 640px) { .project-popup { flex-wrap: wrap; width: auto; } }
+
+.kpi-link { text-decoration: none; color: inherit; } .kpi-link:hover { border-color: var(--brand); }
+.kpi-bad b { color: var(--bad); }
+.sla { display: inline-flex; flex-direction: column; font-size: 12.5px; font-weight: 700; line-height: 1.3; white-space: nowrap; }
+.sla-met { color: var(--ok); } .sla-late { color: var(--warn); } .sla-due { color: var(--info); } .sla-overdue { color: var(--bad); }
+.sla .small { font-weight: 400; }
+.reply-box { background: var(--info-soft); border: 1px solid #bcd3ee; border-radius: 8px; padding: 8px 10px; margin-top: 4px; }
+.timeline li.k-reply::before { background: var(--info); border-color: var(--info); }
+.clamp { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.support-bar { display: flex; flex-direction: column; gap: 8px; font-size: 14px; }
+.support-bar select { max-width: 100%; }
+.filters select, .filters input { font-size: 14px; }

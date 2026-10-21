@@ -4,21 +4,25 @@
 <body>
 <header th:replace="~{fragments/layout :: nav('learn')}"></header>
 <main class="wrap">
-  <div class="row spread">
-    <div>
-      <h1>My courses</h1>
-      <p class="lead" style="margin-bottom:0">Logged in as <strong th:text="${learner.name()}">Name</strong>
-        · <span th:text="${learner.customerName()}">Customer</span> · group <span class="tag team" th:text="${learner.groupName()}">group</span></p>
-    </div>
+  <div class="notice info support-bar">
     <form method="get" action="/learn" class="row">
-      <label for="learner" style="margin:0">View as</label>
-      <select id="learner" name="learner" onchange="this.form.submit()">
+      <strong>Support view</strong> · see the learner portal as
+      <select id="learner" name="learner" aria-label="Learner" onchange="this.form.submit()">
         <option th:each="l : ${learners}" th:value="${l.id()}" th:selected="${l.id() == learner.id()}"
                 th:text="|${l.name()} (${l.customerName()}, ${l.groupName()})|">name</option>
       </select>
       <noscript><button class="btn small">Switch</button></noscript>
     </form>
+    <form method="get" action="/learn/open" class="row">
+      <input type="hidden" name="learner" th:value="${learner.id()}">
+      Test a course link as this learner:
+      <select name="course" aria-label="Course"><option th:each="c : ${allCourses}" th:value="${c.id()}" th:text="|${c.code()} · ${c.title()}|">c</option></select>
+      <button class="btn small ghost">Open link</button>
+    </form>
   </div>
+  <h1 style="margin-top:18px">My courses</h1>
+  <p class="lead" style="margin-bottom:0"><span th:text="${learner.name()}">Name</span> · <span th:text="${learner.customerName()}">Customer</span>
+    · group <span class="tag team" th:text="${learner.groupName()}">group</span></p>
 
   <div class="grid g3" style="margin-top:22px">
     <div class="card course-card" th:each="card : ${catalog}" th:with="c=${card.course()}">
@@ -30,13 +34,6 @@
     <div class="card" th:if="${catalog.isEmpty()}"><p class="muted">No courses in your catalog yet.</p></div>
   </div>
 
-  <h2>Direct links</h2>
-  <p class="small muted">Links a colleague might send by e-mail. Some of these courses are not meant for this learner: that is how
-    many "course not available" tickets start.</p>
-  <div class="row">
-    <a class="btn ghost small" th:each="c : ${allCourses}" th:href="@{/learn/{l}/courses/{c}(l=${learner.id()},c=${c.id()})}"
-       th:text="${c.code()}">CODE</a>
-  </div>
 </main>
 <footer th:replace="~{fragments/layout :: footer}"></footer>
 </body>

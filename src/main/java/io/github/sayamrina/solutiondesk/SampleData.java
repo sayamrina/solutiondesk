@@ -182,7 +182,9 @@ public class SampleData implements ApplicationRunner {
                         new Step(Duration.ofMinutes(20), support, "status", "New → In analysis"),
                         new Step(Duration.ofMinutes(35), support, "comment", "Reproduced with the customer's file in the import page. "
                                 + "Error detail: item 'Load diagram' points to resource 'f2', which does not exist. The file declares 'F2'."),
-                        new Step(Duration.ofMinutes(50), support, "comment", "Sent workaround and link to KB article to the customer."),
+                        new Step(Duration.ofMinutes(50), support, "reply", "Hello, the package references a lesson resource as 'f2', but the "
+                                + "resource is declared as 'F2'. Identifiers are case-sensitive. Please change one of them so they match and import "
+                                + "the package again. Step-by-step guide: knowledge base article SD-IMP-003."),
                         new Step(Duration.ofHours(26), support, "status", "In analysis → Resolved"),
                         new Step(Duration.ofDays(3), support, "status", "Resolved → Closed: customer confirmed")));
 
@@ -205,6 +207,8 @@ public class SampleData implements ApplicationRunner {
                 3, 1, Status.IN_ANALYSIS, "Support", ErrorCode.QUIZ_ENROLLMENT_EXPIRED, quizExpired,
                 null, null, null, now.minus(Duration.ofMinutes(40)), List.of(
                         new Step(Duration.ofMinutes(5), support, "status", "New → In analysis"),
+                        new Step(Duration.ofMinutes(6), support, "reply", "Hello, thank you for the report. We are checking the result of "
+                                + "Mira Kowalski now and will get back to you shortly."),
                         new Step(Duration.ofMinutes(8), support, "comment", "Error code SD-QZ-002 in the request trail. Next: check the enrollment "
                                 + "with the diagnostic 'Enrollments and quiz results of a learner'.")));
 
@@ -257,7 +261,10 @@ public class SampleData implements ApplicationRunner {
                 now.minus(Duration.ofMinutes(55)), List.of(
                         new Step(Duration.ofMinutes(10), support, "status", "New → In analysis"),
                         new Step(Duration.ofMinutes(18), support, "comment", "Not a package error: the server limit is 256 KB per upload "
-                                + "(spring.servlet.multipart.max-file-size). Workaround sent."),
+                                + "(spring.servlet.multipart.max-file-size)."),
+                        new Step(Duration.ofMinutes(19), support, "reply", "Hello, the package is larger than the current upload limit of 256 KB "
+                                + "because of the embedded videos. Until we have an answer from our hosting team, you can import the course without "
+                                + "the videos and link them from your media server."),
                         new Step(Duration.ofMinutes(20), support, "status", "In analysis → Escalated (Hosting): please decide whether the upload limit "
                                 + "can be raised to 2 MB for this tenant; request ID attached")));
 

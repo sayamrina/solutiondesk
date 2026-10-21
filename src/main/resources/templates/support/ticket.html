@@ -44,14 +44,19 @@
         <p class="box-title">Activity</p>
         <ul class="timeline">
           <li th:each="ev : ${events}" th:classappend="${'k-' + ev.kind()}">
-            <div class="meta"><strong th:text="${ev.actor()}">actor</strong> · <span th:text="${@fmt.dt(ev.at())}">date</span></div>
-            <div th:text="${ev.text()}">text</div>
+            <div class="meta"><strong th:text="${ev.actor()}">actor</strong> · <span th:text="${@fmt.dt(ev.at())}">date</span>
+              <span class="tag team" th:if="${ev.kind() == 'reply'}">Reply to customer</span>
+              <span class="tag team" th:if="${ev.kind() == 'comment'}">Internal note</span></div>
+            <div th:classappend="${ev.kind() == 'reply'} ? 'reply-box'" th:text="${ev.text()}">text</div>
           </li>
         </ul>
         <form method="post" th:action="@{/support/tickets/{k}/comment(k=${t.key()})}" th:if="${t.status().name() != 'CLOSED'}">
-          <label for="comment">Internal note</label>
-          <textarea id="comment" name="text" placeholder="What did you check, what did you find?" required></textarea>
-          <p style="margin:8px 0 0"><button class="btn small">Add note</button></p>
+          <div class="row" style="margin-bottom:6px">
+            <label style="margin:0;display:flex;gap:6px;align-items:center;font-weight:600"><input type="radio" name="visibility" value="internal" checked> Internal note</label>
+            <label style="margin:0;display:flex;gap:6px;align-items:center;font-weight:600"><input type="radio" name="visibility" value="customer"> Reply to customer</label>
+          </div>
+          <textarea id="comment" name="text" aria-label="Message" placeholder="Internal: what did you check, what did you find? Reply: what the customer should know or do." required></textarea>
+          <p style="margin:8px 0 0"><button class="btn small">Send</button></p>
         </form>
       </div>
     </div>
@@ -65,8 +70,8 @@
           <dt>Impact</dt><dd th:text="${t.impact() == 1 ? '1 · many customers' : (t.impact() == 2 ? '2 · one customer / a group' : '3 · single user')}">i</dd>
           <dt>Urgency</dt><dd th:text="${t.urgency() == 1 ? '1 · work blocked' : (t.urgency() == 2 ? '2 · work harder' : '3 · minor')}">u</dd>
           <dt>Created</dt><dd th:text="${@fmt.dt(t.createdAt())}">d</dd>
-          <dt>First response</dt><dd><span th:text="'due ' + ${@fmt.dt(responseDue)}">due</span>
-            <span class="small" th:if="${t.status().name() == 'NEW' and @fmt.overdue(responseDue)}" style="color:var(--bad);font-weight:700"> · overdue</span></dd>
+          <dt>First response</dt><dd><span th:replace="~{fragments/layout :: sla(${sla})}"></span>
+            <div class="small muted" th:text="${sla.respondedAt() != null} ? ('at ' + ${@fmt.dt(sla.respondedAt())}) : ('due ' + ${@fmt.dt(sla.due())})">due</div></dd>
         </dl>
       </div>
 

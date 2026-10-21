@@ -72,6 +72,28 @@ public class TicketRepository {
                 .list();
     }
 
+    /** First reply or status change by support, or null if the customer has not had an answer yet. */
+    public Instant firstResponseAt(long ticketId) {
+        return db.sql("""
+                SELECT MIN(at) FROM ticket_event
+                WHERE ticket_id = ? AND kind IN ('reply', 'status') AND actor NOT LIKE 'Customer%'""")
+                .param(ticketId).query(OffsetDateTime.class).optional().map(OffsetDateTime::toInstant).orElse(null);
+    }
+
+    public record Activity(String ticketKey, String summary, Instant at, String actor, String kind, String text) { }
+
+    /** Latest events across all tickets, newest first. */
+    public List<Activity> recentActivity(int limit) {
+        return db.sql("""
+                SELECT t.ticket_key, t.summary, e.at, e.actor, e.kind, e.text
+                FROM ticket_event e JOIN ticket t ON t.id = e.ticket_id
+                ORDER BY e.at DESC, e.id DESC LIMIT ?""")
+                .param(limit)
+                .query((rs, n) -> new Activity(rs.getString("ticket_key"), rs.getString("summary"), instant(rs, "at"),
+                        rs.getString("actor"), rs.getString("kind"), rs.getString("text")))
+                .list();
+    }
+
     private static Instant instant(ResultSet rs, String column) throws SQLException {
         OffsetDateTime t = rs.getObject(column, OffsetDateTime.class);
         return t == null ? null : t.toInstant();

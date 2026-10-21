@@ -5,31 +5,34 @@
 <header th:replace="~{fragments/layout :: nav('import')}"></header>
 <main class="wrap">
   <h1>Course packages</h1>
-  <p class="lead">Customers import courses as XML packages (a simplified, SCORM-like manifest). The importer checks encoding,
-    well-formedness, required fields and references, and blocks DOCTYPE declarations (XXE). Broken sample packages reproduce real incidents.</p>
+  <p class="lead">Courses arrive as XML packages (SCORM-like manifest). Every package is checked for encoding, well-formedness,
+    required fields and references; DOCTYPE declarations are rejected. Use <em>Validate only</em> to check a package without importing it.</p>
   <div class="notice ok" th:if="${imported != null}" style="margin-bottom:16px">Imported <strong th:text="${imported}">file</strong>.</div>
+  <div class="notice ok" th:if="${validated != null}" style="margin-bottom:16px" th:text="${validated}">valid</div>
 
   <div class="grid g2">
     <div class="card">
-      <p class="box-title">Import a sample package</p>
+      <p class="box-title">Reference packages</p>
       <form method="post" action="/admin/import/sample" class="stack">
         <select name="name" aria-label="Sample package" style="width:100%">
-          <optgroup label="Broken packages (reproduce incidents)">
+          <optgroup label="From customer tickets">
             <option th:each="p : ${samples}" th:if="${p.broken()}" th:value="${p.name()}" th:text="|${p.name()} (${p.sizeKb()} KB)|">x</option>
           </optgroup>
-          <optgroup label="Valid packages (already imported, so you get SD-IMP-006)">
+          <optgroup label="Published courses">
             <option th:each="p : ${samples}" th:if="${!p.broken()}" th:value="${p.name()}" th:text="|${p.name()} (${p.sizeKb()} KB)|">x</option>
           </optgroup>
         </select>
-        <button class="btn" type="submit">Import</button>
+        <div class="row"><button class="btn" type="submit" name="mode" value="import">Import</button>
+          <button class="btn ghost" type="submit" name="mode" value="validate">Validate only</button></div>
       </form>
     </div>
     <div class="card">
       <p class="box-title">Upload your own package</p>
       <form method="post" action="/admin/import/upload" enctype="multipart/form-data" class="stack">
         <input type="file" name="file" accept=".xml,text/xml" required>
-        <p class="small muted" style="margin:0">Limit 256 KB. Larger files are rejected by the server (SD-UPL-001).</p>
-        <button class="btn" type="submit">Upload and import</button>
+        <p class="small muted" style="margin:0">Up to 256 KB per package.</p>
+        <div class="row"><button class="btn" type="submit" name="mode" value="import">Upload and import</button>
+          <button class="btn ghost" type="submit" name="mode" value="validate">Validate only</button></div>
       </form>
     </div>
   </div>

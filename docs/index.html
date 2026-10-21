@@ -68,7 +68,7 @@ footer { padding:28px 0 56px; color:var(--muted); font-size:14px; }
     <p class="sub">About six minutes: you follow one incident from the learner's error page to the resolved ticket.</p>
     <ol class="tour">
       <li><div><b>Open the app.</b> The free hosting sleeps when idle, so the first load can take about a minute.</div></li>
-      <li><div><b>Be a learner:</b> <i>Learner view</i> → view as <i>Sam Richter</i> → course link <code>KWM-HY-201</code>. Note the error code and request ID.</div></li>
+      <li><div><b>See it as the learner:</b> <i>Learner view</i> → choose <i>Sam Richter</i> in the support bar → test the course link <code>KWM-HY-201</code>. Note the error code and request ID.</div></li>
       <li><div><b>Pick up the ticket:</b> <i>Tickets</i> → <b>SD-104</b>. The request trail shows the reason from the log.</div></li>
       <li><div><b>Confirm with SQL:</b> open the knowledge base article, run <i>Why can't a learner see a course?</i>. Verdict: <code>group mismatch</code>.</div></li>
       <li><div><b>Resolve:</b> move to <i>In analysis</i>, then <i>Resolved</i> with root cause and resolution. Without a root cause the app refuses.</div></li>
@@ -85,12 +85,12 @@ footer { padding:28px 0 56px; color:var(--muted); font-size:14px; }
     <div class="table-wrap"><table>
       <thead><tr><th>Skill</th><th>In the project</th></tr></thead>
       <tbody>
-        <tr><td>Java</td><td>Spring Boot 3 on Java 21: services, JDBC repositories, controllers, central error handling; 37 JUnit and MockMvc tests</td></tr>
+        <tr><td>Java</td><td>Spring Boot 3 on Java 21: services, JDBC repositories, controllers, central error handling; 43 JUnit and MockMvc tests</td></tr>
         <tr><td>SQL</td><td>Schema with constraints and indexes, plain SQL repositories, six parameterised read-only diagnostic queries</td></tr>
-        <tr><td>XML</td><td>Course package importer: encoding, well-formedness, required fields, references; DOCTYPE blocked against XXE</td></tr>
+        <tr><td>XML</td><td>Course package importer with a validate-only dry run: encoding, well-formedness, required fields, references; DOCTYPE blocked against XXE</td></tr>
         <tr><td>HTML / CSS</td><td>Server-rendered pages (Thymeleaf), responsive layout, lesson HTML reduced to a safe allowlist</td></tr>
         <tr><td>Log and error analysis</td><td>logfmt logs with request ID, error code, owner team, path, status and duration; error groups, search, request trails</td></tr>
-        <tr><td>Incident handling</td><td>Impact × urgency priority, response targets, workflow rules, escalation with evidence, root cause / workaround / resolution, Jira CSV export</td></tr>
+        <tr><td>Incident handling</td><td>Support dashboard, impact × urgency priority, first-response SLA, filters, internal notes vs. replies to the customer, workflow rules, escalation with evidence, Jira CSV export</td></tr>
         <tr><td>Knowledge base</td><td>One article per error code: symptom, cause, how to check, workaround, when to escalate</td></tr>
       </tbody>
     </table></div>
@@ -100,6 +100,7 @@ footer { padding:28px 0 56px; color:var(--muted); font-size:14px; }
 <section>
   <div class="wrap">
     <h2>In the app</h2>
+    <figure><img src="img/home.png" alt="Support dashboard with tickets that need attention, SLA and recent activity" width="1366" height="860" loading="lazy"><figcaption>The support dashboard: open tickets by first-response status, errors of the last 24 hours and recent activity.</figcaption></figure>
     <figure><img src="img/ticket.png" alt="Ticket SD-106 with analysis, activity and next step" width="1366" height="860" loading="lazy"><figcaption>A resolved incident: customer report, root cause, workaround, resolution and the full activity, including the escalation to Development.</figcaption></figure>
     <div class="two">
       <figure><img src="img/logs.png" alt="Error groups in the log analysis" width="1366" height="860" loading="lazy"><figcaption>Log analysis: errors grouped by code, with owner team, paths and request IDs.</figcaption></figure>

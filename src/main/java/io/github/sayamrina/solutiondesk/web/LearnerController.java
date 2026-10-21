@@ -39,6 +39,12 @@ public class LearnerController {
         return "learn/catalog";
     }
 
+    /** Support tool: open a course by its link exactly as the selected learner would. */
+    @GetMapping("/learn/open")
+    public String openByLink(@RequestParam long learner, @RequestParam long course) {
+        return "redirect:/learn/" + learner + "/courses/" + course;
+    }
+
     @GetMapping("/learn/{learnerId}/courses/{courseId}")
     public String course(@PathVariable long learnerId, @PathVariable long courseId, Model model) {
         Course course = service.openCourse(learnerId, courseId);

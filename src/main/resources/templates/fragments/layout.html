@@ -30,10 +30,14 @@
 </aside>
 </th:block>
 <footer th:fragment="footer" class="footer">
-  <div class="wrap">SolutionDesk · AI project by Amrina · Sample data only, reset on every restart ·
-    <a href="https://sayamrina.github.io/solutiondesk/">Project page</a> · <a href="https://sayamrina.github.io/">Portfolio</a></div>
+  <div class="wrap row spread"><span>SolutionDesk 1.0.1 · <a href="/actuator/health">System status</a> · All customer accounts on this instance are sample tenants</span>
+    <span><a href="https://sayamrina.github.io/solutiondesk/">About SolutionDesk</a> · <a href="https://github.com/sayamrina/solutiondesk">Source code</a></span></div>
 </footer>
 <span th:fragment="prio(p)" class="prio" th:classappend="${'p' + p.substring(1)}" th:text="${p}">P3</span>
+<span th:fragment="sla(x)" class="sla" th:classappend="${'sla-' + x.state().name().toLowerCase()}">
+  <span th:text="${x.state().label()}">Response due</span>
+  <span class="small muted" th:if="${x.respondedAt() == null}" th:text="${@fmt.dueIn(x.due())}">in 3 h</span>
+</span>
 <span th:fragment="status(s)" class="status" th:classappend="${'s-' + s.name().toLowerCase()}" th:text="${s.label()}">New</span>
 </body>
 </html>

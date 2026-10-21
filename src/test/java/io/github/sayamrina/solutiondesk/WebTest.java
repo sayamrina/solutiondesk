@@ -81,6 +81,43 @@ class WebTest {
     }
 
     @Test
+    void dashboardShowsWhatNeedsAttention() throws Exception {
+        mvc.perform(get("/")).andExpect(content().string(containsString("Needs attention")))
+                .andExpect(content().string(containsString("SD-108")))
+                .andExpect(content().string(containsString("Response due")));
+    }
+
+    @Test
+    void replyToCustomerCountsAsFirstResponse() throws Exception {
+        mvc.perform(get("/support/tickets/SD-108")).andExpect(content().string(containsString("Response due")));
+        mvc.perform(post("/support/tickets/SD-108/comment").param("visibility", "customer").param("text", "We are on it."))
+                .andExpect(status().is3xxRedirection());
+        mvc.perform(get("/support/tickets/SD-108")).andExpect(content().string(containsString("Responded in time")))
+                .andExpect(content().string(containsString("Reply to customer")));
+    }
+
+    @Test
+    void internalNoteDoesNotCountAsResponse() throws Exception {
+        mvc.perform(post("/support/tickets/SD-104/comment").param("text", "checking the group"));
+        mvc.perform(get("/support/tickets/SD-104")).andExpect(content().string(containsString("Response due")));
+    }
+
+    @Test
+    void validateOnlyDoesNotImport() throws Exception {
+        String xml = new String(new org.springframework.core.io.ClassPathResource("samples/load-securing-basics.xml")
+                .getInputStream().readAllBytes(), java.nio.charset.StandardCharsets.UTF_8).replace("VLG-LS-101", "VLG-LS-999");
+        mvc.perform(multipart("/admin/import/upload").file(new MockMultipartFile("file", "new.xml", "text/xml", xml.getBytes()))
+                .param("mode", "validate")).andExpect(status().is3xxRedirection());
+        mvc.perform(get("/admin/import")).andExpect(content().string(org.hamcrest.Matchers.not(containsString("VLG-LS-999"))));
+    }
+
+    @Test
+    void ticketFilters() throws Exception {
+        mvc.perform(get("/support/tickets?view=all&q=SD-IMP-001")).andExpect(content().string(containsString("SD-108")))
+                .andExpect(content().string(org.hamcrest.Matchers.not(containsString(">SD-103<"))));
+    }
+
+    @Test
     void unknownPagesAre404() throws Exception {
         mvc.perform(get("/support/tickets/SD-999")).andExpect(status().isNotFound());
     }

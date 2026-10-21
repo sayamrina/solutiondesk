@@ -6,11 +6,10 @@ import io.github.sayamrina.solutiondesk.logging.LogAnalyzer;
 import io.github.sayamrina.solutiondesk.support.Diagnostics;
 import io.github.sayamrina.solutiondesk.support.JiraExport;
 import io.github.sayamrina.solutiondesk.support.KnowledgeBase;
-import io.github.sayamrina.solutiondesk.support.Priority;
+import io.github.sayamrina.solutiondesk.support.Sla;
 import io.github.sayamrina.solutiondesk.support.Ticket;
 import io.github.sayamrina.solutiondesk.support.TicketRepository;
 import io.github.sayamrina.solutiondesk.support.TicketService;
-import java.time.Instant;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -29,7 +28,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 public class SupportController {
 
-    private static final String ACTOR = "Support (you)";
+    private static final String ACTOR = "Support · You";
 
     private final TicketRepository tickets;
     private final TicketService ticketService;
@@ -52,16 +51,31 @@ public class SupportController {
 
     // ---- tickets ----
 
+    public record Row(Ticket ticket, Sla sla) { }
+
     @GetMapping("/support/tickets")
-    public String tickets(@RequestParam(defaultValue = "open") String view, Model model) {
-        List<Ticket> all = tickets.all();
-        model.addAttribute("tickets", switch (view) {
-            case "all" -> all;
-            case "closed" -> all.stream().filter(t -> !t.status().open()).toList();
-            default -> all.stream().filter(t -> t.status().open()).toList();
-        });
+    public String tickets(@RequestParam(defaultValue = "open") String view, @RequestParam(required = false) String q,
+                          @RequestParam(required = false) String priority, @RequestParam(required = false) Long customer,
+                          Model model) {
+        String query = q == null ? "" : q.strip().toLowerCase();
+        List<Row> rows = tickets.all().stream()
+                .filter(t -> switch (view) {
+                    case "all" -> true;
+                    case "closed" -> !t.status().open();
+                    default -> t.status().open();
+                })
+                .filter(t -> priority == null || priority.isBlank() || t.priority().equals(priority))
+                .filter(t -> customer == null || t.customerId() == customer)
+                .filter(t -> query.isEmpty() || (t.key() + " " + t.summary() + " " + t.description() + " "
+                        + (t.errorCode() == null ? "" : t.errorCode())).toLowerCase().contains(query))
+                .map(t -> new Row(t, ticketService.sla(t)))
+                .toList();
+        model.addAttribute("rows", rows);
         model.addAttribute("view", view);
-        model.addAttribute("now", Instant.now());
+        model.addAttribute("q", q);
+        model.addAttribute("priority", priority);
+        model.addAttribute("customer", customer);
+        model.addAttribute("customers", db.sql("SELECT id, name FROM customer ORDER BY name").query().listOfRows());
         return "support/tickets";
     }
 
@@ -74,7 +88,7 @@ public class SupportController {
         model.addAttribute("teams", TicketService.TEAMS);
         model.addAttribute("trail", t.requestId() == null ? List.of() : logs.trail(t.requestId()));
         model.addAttribute("article", t.kbSlug() == null ? null : kb.bySlug(t.kbSlug()).orElse(null));
-        model.addAttribute("responseDue", t.createdAt().plus(Priority.firstResponse(t.priority())));
+        model.addAttribute("sla", ticketService.sla(t));
         return "support/ticket";
     }
 
@@ -100,8 +114,13 @@ public class SupportController {
     }
 
     @PostMapping("/support/tickets/{key}/comment")
-    public String comment(@PathVariable String key, @RequestParam String text) {
-        ticketService.comment(key, ACTOR, text);
+    public String comment(@PathVariable String key, @RequestParam String text,
+                          @RequestParam(defaultValue = "internal") String visibility) {
+        if (visibility.equals("customer")) {
+            ticketService.reply(key, ACTOR, text);
+        } else {
+            ticketService.comment(key, ACTOR, text);
+        }
         return "redirect:/support/tickets/" + key + "#activity";
     }
 
